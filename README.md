@@ -1,16 +1,19 @@
-# prayer_room_locator
+# Prayer Room Locator App
 
-A new Flutter project.
+Welcome to the Prayer Room Locator app, this app helps you locate prayer rooms conveniently and efficiently.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+### Map View
+- Easily find nearby prayer rooms displayed on an interactive map.
+- Pinpoint your current location and explore prayer rooms in your vicinity.
+- Filter options to customize your search based on preferences such as distance, amenities, and more.
 
-A few resources to get you started if this is your first Flutter project:
+### List View
+- Browse through a list of nearby prayer rooms sorted by distance.
+- Quickly view essential details such as address, distance, and rating.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Prayer Room Details
+- Access comprehensive details about each prayer room, including photos, reviews, and additional information.
+- Gain insights from user reviews to make informed decisions.
+- Explore further details such as amenities, facilities, and contact information.
