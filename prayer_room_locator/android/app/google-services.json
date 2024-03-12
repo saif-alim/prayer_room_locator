@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "249723010235",
+    "project_id": "prayer-room-locator",
+    "storage_bucket": "prayer-room-locator.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:249723010235:android:9b45a19112ffa4260b3d9e",
+        "android_client_info": {
+          "package_name": "com.example.prayer_room_locator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "249723010235-15gh6kr5o5b97udh2pi97c7e1kv9sc89.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.prayer_room_locator",
+            "certificate_hash": "ee016cdacba14bba01f4a8892897fbff17aba3bb"
+          }
+        },
+        {
+          "client_id": "249723010235-8i3mcrssi1la3733ngaap513dm5d66mi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-twf40fOacK6tNuZxDt1wHo_5le5fDKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "249723010235-8i3mcrssi1la3733ngaap513dm5d66mi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "249723010235-epusqiqandgngtcpf06pmnliubgcp13p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.prayerRoomLocator"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
