@@ -56,6 +56,7 @@ dependencies:
   google_sign_in: ^6.2.1
   fpdart: ^1.1.0
   provider: ^6.1.2
+  routemaster: ^1.0.1
 
 dev_dependencies:
   flutter_test:

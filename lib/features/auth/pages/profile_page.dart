@@ -1,12 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:prayer_room_locator/features/auth/controller/auth_controller.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider)!;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
@@ -23,7 +27,7 @@ class ProfilePage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Text(
-              'John Doe', // Add user's name
+              user.name, // Add user's name
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -31,7 +35,7 @@ class ProfilePage extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              'johndoe@example.com', // Add user's email
+              user.email,
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -40,19 +44,19 @@ class ProfilePage extends StatelessWidget {
             ListTile(
               title: Text('Edit Profile'),
               onTap: () {
-                // Add navigation logic to edit profile page
+                // navigation logic to edit profile page
               },
             ),
             ListTile(
               title: Text('Change Password'),
               onTap: () {
-                // Add navigation logic to change password page
+                // navigation logic to change password page
               },
             ),
             ListTile(
               title: Text('Logout'),
               onTap: () {
-                // Add logic to handle logout
+                // logic to handle logout
               },
             ),
           ],

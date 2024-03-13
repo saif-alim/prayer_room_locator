@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_shadow/flutter_icon_shadow.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:prayer_room_locator/repository/controller/locations_controller.dart';
 
-class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+class MapPage extends ConsumerWidget {
+  MapPage({super.key});
 
-  @override
-  State<MapPage> createState() => _MapPageState();
-}
+  late final MapController mapController = MapController();
 
-class _MapPageState extends State<MapPage> {
-  late MapController mapController = MapController();
   //////////////////////////////////////////////////////////////////////////////////
   //functions and methods
 
@@ -58,7 +56,6 @@ class _MapPageState extends State<MapPage> {
   }
 
   // move to a specified location
-  // takes position argument
   Future<void> _moveToPosition(Position position) async {
     mapController.move(
       LatLng(position.latitude, position.longitude),
@@ -67,14 +64,8 @@ class _MapPageState extends State<MapPage> {
   }
 
   // For testing purposes
-  // void _moveToThisLocation(LatLng latLng) {
-  //   mapController.move(latLng, 17.0);
-  // }
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /// Build Widget
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       alignment: Alignment.bottomLeft,
       children: [
@@ -90,35 +81,22 @@ class _MapPageState extends State<MapPage> {
               userAgentPackageName: 'com.example.app',
               subdomains: const ['a', 'b', 'c'],
             ),
-            const MarkerLayer(alignment: Alignment.topCenter, markers: [
-              Marker(
-                point: LatLng(51.5234284822, -0.039269956473),
-                child: Icon(
-                  Icons.location_pin,
-                  color: Color.fromARGB(255, 255, 80, 67),
-                  size: 40,
+            MarkerLayer(
+                alignment: Alignment.topCenter,
+                markers: ref.read(markerProvider)
+                // [
+                // Marker(
+                //   point: LatLng(51.5234284822, -0.039269956473),
+                //   child: Icon(
+                //     Icons.location_pin,
+                //     color: Color.fromARGB(255, 255, 80, 67),
+                //     size: 40,
+                //   ),
+                // ),
+                // ],
                 ),
-              ),
-            ])
           ],
         ),
-        // Search Bar
-        // Padding(
-        //     padding:
-        //         const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
-        //     child: Container(
-        //       decoration: BoxDecoration(
-        //           borderRadius: BorderRadius.circular(30), color: Colors.white),
-        //       child: TextField(
-        //         decoration: InputDecoration(
-        //           hintText: 'Search',
-        //           contentPadding:
-        //               EdgeInsets.symmetric(horizontal: 30, vertical: 17.5),
-        //           prefixIcon: Icon(Icons.search),
-        //           border: InputBorder.none,
-        //         ),
-        //       ),
-        //     )),
 
         // Location Button
         Positioned(
@@ -144,8 +122,6 @@ class _MapPageState extends State<MapPage> {
                     // Moves the map to user's location
                     Position position = await _determinePosition();
                     await _moveToPosition(position);
-                    // _moveToThisLocation(
-                    //     LatLng(51.52329044606649, -0.039659628745819034));
                   },
                   icon: const Center(
                     child: Icon(

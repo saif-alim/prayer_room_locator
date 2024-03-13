@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -9,21 +7,21 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(
-      //   title: Text('Settings'),
+      //   title: const Text('Settings'),
       // ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'This is all facade only',
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.w800,
               ),
             ),
-            Text(
+            const Text(
               'Notification Settings',
               style: TextStyle(
                 fontSize: 20,
@@ -31,14 +29,14 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
             SwitchListTile(
-              title: Text('Enable Notifications'),
+              title: const Text('Enable Notifications'),
               value: false, // Add logic to control this value
               onChanged: (value) {
                 // Add logic to handle switch state change
               },
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Account Settings',
               style: TextStyle(
                 fontSize: 20,
@@ -46,13 +44,13 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: Text('Change Password'),
+              title: const Text('Change Password'),
               onTap: () {
                 // Add navigation logic to change password page
               },
             ),
             ListTile(
-              title: Text('Logout'),
+              title: const Text('Logout'),
               onTap: () {
                 // Add logic to handle logout
               },
