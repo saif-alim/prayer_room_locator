@@ -9,16 +9,14 @@ import 'package:prayer_room_locator/repository/locations_repository.dart';
 import 'package:prayer_room_locator/utils/show_snack_bar.dart';
 import 'package:routemaster/routemaster.dart';
 
-final locationsProvider = Provider((ref) {
+final locationsProvider = StreamProvider((ref) {
   final locationsController = ref.watch(locationsControllerProvider.notifier);
   return locationsController.getLocations();
 });
 
 final markerProvider = Provider<List<Marker>>((ref) {
-  final locationsController = ref.read(locationsControllerProvider.notifier);
-  List<Marker> markers = locationsController.buildMarkers();
-  debugPrint(markers.toString());
-  return markers;
+  final locationsController = ref.watch(locationsControllerProvider.notifier);
+  return locationsController._markers;
 });
 
 final locationsControllerProvider =
@@ -28,9 +26,11 @@ final locationsControllerProvider =
       locationsRepository: locationsRepository, ref: ref);
 });
 
+//
 class LocationsController extends StateNotifier<bool> {
   final LocationsRepository _locationsRepository;
   final Ref _ref;
+  final List<Marker> _markers = [];
 
   LocationsController(
       {required LocationsRepository locationsRepository, required Ref ref})
@@ -61,26 +61,41 @@ class LocationsController extends StateNotifier<bool> {
     });
   }
 
-  List<LocationModel> getLocations() {
+  Stream<List<LocationModel>> getLocations() {
     return _locationsRepository.getLocations();
   }
 
-  List<Marker> buildMarkers() {
-    final locations = getLocations();
-    List<Marker> markers = [];
+  // void buildMarkers() async {
+  //   final locations = await getLocations().first;
 
+  //   _markers.clear();
+  //   for (var location in locations) {
+  //     _markers.add(Marker(
+  //         point: LatLng(location.x, location.y),
+  //         child: const Icon(
+  //           Icons.location_pin,
+  //           color: Color.fromARGB(255, 255, 80, 67),
+  //           size: 40,
+  //         )));
+  //   }
+  // }
+
+  void buildMarkers() async {
+    final locations = await getLocations().first;
+
+    _markers.clear();
     for (var location in locations) {
-      markers.add(
-        Marker(
+      _markers.add(Marker(
           point: LatLng(location.x, location.y),
           child: const Icon(
             Icons.location_pin,
             color: Color.fromARGB(255, 255, 80, 67),
             size: 40,
-          ),
-        ),
-      );
+          )));
     }
-    return markers;
+    // _markers.clear();
+    // buildMarkers();
+    debugPrint('MARK LENGTH: ${_markers.length}');
+    debugPrint('MARK: ${_markers[0].point.latitude}');
   }
 }

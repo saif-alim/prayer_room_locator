@@ -62,12 +62,14 @@ class LocationModel {
   factory LocationModel.fromMap(Map<String, dynamic> map) {
     return LocationModel(
       id: map['id'] as String,
-      x: map['x'] as double,
-      y: map['y'] as double,
+      x: map['x'].toDouble() as double,
+      y: map['y'].toDouble() as double,
       name: map['name'] as String,
       details: map['details'] as String,
-      photos: List<String>.from((map['photos'] as List<String>)),
-      moderators: List<String>.from((map['moderators'] as List<String>)),
+      // photos: List<String>.from((map['photos'] as List<String>)),
+      photos: (map['photos'] as List).cast<String>(),
+      // moderators: List<String>.from((map['moderators'] as List<String>)),
+      moderators: (map['photos'] as List).cast<String>(),
       isVerified: map['isVerified'] as bool,
     );
   }

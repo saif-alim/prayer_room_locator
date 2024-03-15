@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:prayer_room_locator/core/constants/constants.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       // appBar: AppBar(
       //   title: const Text('Settings'),
@@ -15,11 +17,8 @@ class SettingsPage extends StatelessWidget {
           //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'This is all facade only',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w800,
-              ),
+              'Settings',
+              style: Constants.heading1,
             ),
             const Text(
               'Notification Settings',
@@ -50,11 +49,10 @@ class SettingsPage extends StatelessWidget {
               },
             ),
             ListTile(
-              title: const Text('Logout'),
-              onTap: () {
-                // Add logic to handle logout
-              },
-            ),
+                title: const Text('Logout'),
+                onTap: () {
+                  // Add logic to handle logout
+                }),
           ],
         ),
       ),

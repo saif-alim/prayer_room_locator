@@ -27,15 +27,18 @@ class LocationsRepository {
     }
   }
 
-  List<LocationModel> getLocations() {
-    List<LocationModel> locations = [];
-    _locations.snapshots().map((event) {
+  Stream<List<LocationModel>> getLocations() {
+    return _locations
+        .where('isVerified', isEqualTo: false)
+        .snapshots()
+        .map((event) {
+      List<LocationModel> locations = [];
       for (var doc in event.docs) {
         locations
             .add(LocationModel.fromMap(doc.data() as Map<String, dynamic>));
       }
+      return locations;
     });
-    return locations;
   }
 
   CollectionReference get _locations =>

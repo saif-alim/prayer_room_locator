@@ -11,8 +11,8 @@ class MapPage extends ConsumerWidget {
 
   late final MapController mapController = MapController();
 
-  //////////////////////////////////////////////////////////////////////////////////
   //functions and methods
+  //
 
   // get users current location after
   // checking for permissions
@@ -82,22 +82,18 @@ class MapPage extends ConsumerWidget {
               subdomains: const ['a', 'b', 'c'],
             ),
             MarkerLayer(
-                alignment: Alignment.topCenter,
-                markers: ref.read(markerProvider)
-                // [
-                // Marker(
-                //   point: LatLng(51.5234284822, -0.039269956473),
-                //   child: Icon(
-                //     Icons.location_pin,
-                //     color: Color.fromARGB(255, 255, 80, 67),
-                //     size: 40,
-                //   ),
-                // ),
-                // ],
-                ),
+              alignment: Alignment.topCenter,
+              markers: ref.read(
+                  markerProvider), // returning empty list [] for some reason FIXED!
+            ),
           ],
         ),
-
+        //
+        ElevatedButton(
+            onPressed: () {
+              ref.watch(locationsControllerProvider.notifier).buildMarkers();
+            },
+            child: const Icon(Icons.heart_broken)),
         // Location Button
         Positioned(
           bottom: 10,
