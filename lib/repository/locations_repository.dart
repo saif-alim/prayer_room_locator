@@ -29,7 +29,7 @@ class LocationsRepository {
 
   Stream<List<LocationModel>> getLocations() {
     return _locations
-        .where('isVerified', isEqualTo: false)
+        .where('isVerified', isEqualTo: true)
         .snapshots()
         .map((event) {
       List<LocationModel> locations = [];
