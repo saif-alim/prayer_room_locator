@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:prayer_room_locator/core/common/custom_widgets.dart';
 import 'package:prayer_room_locator/core/common/loader.dart';
 import 'package:prayer_room_locator/repository/controller/locations_controller.dart';
 
@@ -66,77 +67,82 @@ class MapPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Stack(
-      alignment: Alignment.bottomLeft,
-      children: [
-        FlutterMap(
-          mapController: mapController,
-          options: const MapOptions(
-            initialCenter: LatLng(51.5234284822, -0.039269956473),
-            initialZoom: 12,
+    return Scaffold(
+      appBar: const CustomAppBar(),
+      drawer: const CustomDrawer(),
+      //
+      body: Stack(
+        alignment: Alignment.bottomLeft,
+        children: [
+          FlutterMap(
+            mapController: mapController,
+            options: const MapOptions(
+              initialCenter: LatLng(51.5234284822, -0.039269956473),
+              initialZoom: 12,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.example.app',
+                subdomains: const ['a', 'b', 'c'],
+              ),
+              // Marker Layer code
+              //
+              FutureBuilder(
+                future: ref.watch(markerProvider),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Loader();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  final markers = snapshot.data!;
+                  return MarkerLayer(
+                    alignment: Alignment.topCenter,
+                    markers: markers,
+                  );
+                },
+              ),
+            ],
           ),
-          children: [
-            TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.example.app',
-              subdomains: const ['a', 'b', 'c'],
-            ),
-            // Marker Layer code
-            //
-            FutureBuilder(
-              future: ref.watch(markerProvider),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Loader();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                final markers = snapshot.data!;
-                return MarkerLayer(
-                  alignment: Alignment.topCenter,
-                  markers: markers,
-                );
-              },
-            ),
-          ],
-        ),
-        // Location Button
-        //
-        Positioned(
-          bottom: 10,
-          right: 10,
-          child: Container(
-              alignment: Alignment.bottomLeft,
-              width: 100,
-              height: 100,
-              child: Stack(children: [
-                const Center(
-                    child: IconShadow(
-                  Icon(
-                    Icons.circle,
-                    size: 80,
-                    color: Colors.white,
-                  ),
-                  shadowColor: Colors.black,
-                  shadowBlurSigma: 0.2,
-                )),
-                IconButton(
-                  onPressed: () async {
-                    // Moves the map to user's location
-                    Position position = await _determinePosition();
-                    await _moveToPosition(position);
-                  },
-                  icon: const Center(
-                    child: Icon(
-                      Icons.my_location,
-                      size: 30,
-                      color: Colors.lightBlue,
+          // Location Button
+          //
+          Positioned(
+            bottom: 10,
+            right: 10,
+            child: Container(
+                alignment: Alignment.bottomLeft,
+                width: 100,
+                height: 100,
+                child: Stack(children: [
+                  const Center(
+                      child: IconShadow(
+                    Icon(
+                      Icons.circle,
+                      size: 80,
+                      color: Colors.white,
+                    ),
+                    shadowColor: Colors.black,
+                    shadowBlurSigma: 0.2,
+                  )),
+                  IconButton(
+                    onPressed: () async {
+                      // Moves the map to user's location
+                      Position position = await _determinePosition();
+                      await _moveToPosition(position);
+                    },
+                    icon: const Center(
+                      child: Icon(
+                        Icons.my_location,
+                        size: 30,
+                        color: Colors.lightBlue,
+                      ),
                     ),
                   ),
-                ),
-              ])),
-        ),
-      ],
+                ])),
+          ),
+        ],
+      ),
     );
   }
 }

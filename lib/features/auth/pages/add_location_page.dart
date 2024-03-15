@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:prayer_room_locator/core/common/custom_widgets.dart';
 import 'package:prayer_room_locator/core/common/loader.dart';
 import 'package:prayer_room_locator/core/constants/constants.dart';
 import 'package:prayer_room_locator/repository/controller/locations_controller.dart';
@@ -51,6 +52,8 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(locationsControllerProvider);
     return Scaffold(
+      appBar: const CustomAppBar(),
+      drawer: const CustomDrawer(),
       body: isLoading
           ? const Loader()
           : Padding(

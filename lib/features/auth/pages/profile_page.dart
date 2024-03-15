@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:prayer_room_locator/core/common/custom_widgets.dart';
 import 'package:prayer_room_locator/features/auth/controller/auth_controller.dart';
 
 class ProfilePage extends ConsumerWidget {
@@ -12,9 +13,8 @@ class ProfilePage extends ConsumerWidget {
     final user = ref.watch(userProvider)!;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Profile'),
-      ),
+      appBar: CustomAppBar(),
+      drawer: CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
