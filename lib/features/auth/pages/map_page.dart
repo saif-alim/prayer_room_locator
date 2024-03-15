@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:prayer_room_locator/core/common/loader.dart';
 import 'package:prayer_room_locator/repository/controller/locations_controller.dart';
 
 class MapPage extends ConsumerWidget {
@@ -63,7 +64,6 @@ class MapPage extends ConsumerWidget {
     );
   }
 
-  // For testing purposes
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
@@ -81,20 +81,27 @@ class MapPage extends ConsumerWidget {
               userAgentPackageName: 'com.example.app',
               subdomains: const ['a', 'b', 'c'],
             ),
-            MarkerLayer(
-              alignment: Alignment.topCenter,
-              markers: ref.read(
-                  markerProvider), // returning empty list [] for some reason FIXED!
+            // Marker Layer code
+            //
+            FutureBuilder(
+              future: ref.watch(markerProvider),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Loader();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                final markers = snapshot.data!;
+                return MarkerLayer(
+                  alignment: Alignment.topCenter,
+                  markers: markers,
+                );
+              },
             ),
           ],
         ),
-        //
-        ElevatedButton(
-            onPressed: () {
-              ref.watch(locationsControllerProvider.notifier).buildMarkers();
-            },
-            child: const Icon(Icons.heart_broken)),
         // Location Button
+        //
         Positioned(
           bottom: 10,
           right: 10,

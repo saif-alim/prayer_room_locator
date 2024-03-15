@@ -14,9 +14,10 @@ final locationsProvider = StreamProvider((ref) {
   return locationsController.getLocations();
 });
 
-final markerProvider = Provider<List<Marker>>((ref) {
+final markerProvider = Provider<Future<List<Marker>>>((ref) async {
   final locationsController = ref.watch(locationsControllerProvider.notifier);
-  return locationsController._markers;
+  final markers = locationsController.buildMarkers();
+  return markers;
 });
 
 final locationsControllerProvider =
@@ -30,7 +31,7 @@ final locationsControllerProvider =
 class LocationsController extends StateNotifier<bool> {
   final LocationsRepository _locationsRepository;
   final Ref _ref;
-  final List<Marker> _markers = [];
+  // final List<Marker> _markers = [];
 
   LocationsController(
       {required LocationsRepository locationsRepository, required Ref ref})
@@ -65,27 +66,13 @@ class LocationsController extends StateNotifier<bool> {
     return _locationsRepository.getLocations();
   }
 
-  // void buildMarkers() async {
-  //   final locations = await getLocations().first;
-
-  //   _markers.clear();
-  //   for (var location in locations) {
-  //     _markers.add(Marker(
-  //         point: LatLng(location.x, location.y),
-  //         child: const Icon(
-  //           Icons.location_pin,
-  //           color: Color.fromARGB(255, 255, 80, 67),
-  //           size: 40,
-  //         )));
-  //   }
-  // }
-
-  void buildMarkers() async {
+  Future<List<Marker>> buildMarkers() async {
     final locations = await getLocations().first;
 
-    _markers.clear();
+    final List<Marker> markers = [];
+
     for (var location in locations) {
-      _markers.add(Marker(
+      markers.add(Marker(
           point: LatLng(location.x, location.y),
           child: const Icon(
             Icons.location_pin,
@@ -95,7 +82,9 @@ class LocationsController extends StateNotifier<bool> {
     }
     // _markers.clear();
     // buildMarkers();
-    debugPrint('MARK LENGTH: ${_markers.length}');
-    debugPrint('MARK: ${_markers[0].point.latitude}');
+    debugPrint('MARK LENGTH: ${markers.length}');
+    debugPrint('MARK: ${markers[0].point.latitude}');
+
+    return markers;
   }
 }
