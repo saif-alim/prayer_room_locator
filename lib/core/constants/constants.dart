@@ -20,4 +20,5 @@ class Constants {
   static const heading1 = TextStyle(fontSize: 40, fontWeight: FontWeight.bold);
 
   static const heading2 = TextStyle(fontSize: 25, fontWeight: FontWeight.bold);
+  static const heading3 = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
 }

@@ -1,9 +1,8 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/core/common/custom_widgets.dart';
 import 'package:prayer_room_locator/features/auth/controller/auth_controller.dart';
+import 'package:routemaster/routemaster.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -13,48 +12,59 @@ class ProfilePage extends ConsumerWidget {
     final user = ref.watch(userProvider)!;
 
     return Scaffold(
-      appBar: CustomAppBar(),
-      drawer: CustomDrawer(),
+      appBar: const CustomAppBar(),
+      drawer: const CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 50,
               backgroundImage: NetworkImage(
                   'https://via.placeholder.com/150'), // Add user profile image URL
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
-              user.name, // Add user's name
-              style: TextStyle(
+              user.name, // user's name
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               user.email,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ListTile(
-              title: Text('Edit Profile'),
+              title: const Text('Settings'),
               onTap: () {
-                // navigation logic to edit profile page
+                //
+                Routemaster.of(context).push('/settings');
               },
             ),
+            const SizedBox(height: 10),
+            // new location
             ListTile(
-              title: Text('Change Password'),
+              title: const Text('Request a New Location'),
               onTap: () {
-                // navigation logic to change password page
+                //
+                Routemaster.of(context).push('/addlocation');
               },
             ),
+            const SizedBox(height: 10),
             ListTile(
-              title: Text('Logout'),
+              title: const Text(
+                'Logout',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 220, 77, 66),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               onTap: () {
                 // logic to handle logout
               },

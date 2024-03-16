@@ -20,28 +20,9 @@ class SettingsPage extends ConsumerWidget {
               'Settings',
               style: Constants.heading1,
             ),
-            const Text(
-              'Notification Settings',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SwitchListTile(
-              title: const Text('Enable Notifications'),
-              value: false, // Add logic to control this value
-              onChanged: (value) {
-                // Add logic to handle switch state change
-              },
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Account Settings',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            const SizedBox(height: 10),
+            // settings tiles
+            const Text('Account Settings', style: Constants.heading3),
             ListTile(
               title: const Text('Change Password'),
               onTap: () {

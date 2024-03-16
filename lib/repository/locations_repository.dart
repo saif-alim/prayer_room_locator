@@ -41,6 +41,11 @@ class LocationsRepository {
     });
   }
 
+  Stream<LocationModel> getLocationByName(String name) {
+    return _locations.doc(name).snapshots().map(
+        (event) => LocationModel.fromMap(event.data() as Map<String, dynamic>));
+  }
+
   CollectionReference get _locations =>
       _firestore.collection(FirebaseConstants.locationsCollection);
 }

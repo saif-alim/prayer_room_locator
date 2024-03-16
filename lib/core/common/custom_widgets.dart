@@ -43,9 +43,9 @@ class CustomDrawer extends StatelessWidget {
           },
         ),
         ListTile(
-          title: const Text('Settings'),
+          title: const Text('List View'),
           onTap: () {
-            Routemaster.of(context).push('/settings');
+            Routemaster.of(context).push('/listview');
             Routemaster.of(context).pop();
           },
         ),

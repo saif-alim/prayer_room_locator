@@ -27,6 +27,12 @@ final locationsControllerProvider =
       locationsRepository: locationsRepository, ref: ref);
 });
 
+final getLocationByNameProvider = StreamProvider.family((ref, String name) {
+  return ref
+      .watch(locationsControllerProvider.notifier)
+      .getLocationByName(name);
+});
+
 //
 class LocationsController extends StateNotifier<bool> {
   final LocationsRepository _locationsRepository;
@@ -72,13 +78,16 @@ class LocationsController extends StateNotifier<bool> {
     final List<Marker> markers = [];
 
     for (var location in locations) {
-      markers.add(Marker(
+      markers.add(
+        Marker(
           point: LatLng(location.x, location.y),
           child: const Icon(
             Icons.location_pin,
             color: Color.fromARGB(255, 255, 80, 67),
             size: 40,
-          )));
+          ),
+        ),
+      );
     }
     // _markers.clear();
     // buildMarkers();
@@ -86,5 +95,9 @@ class LocationsController extends StateNotifier<bool> {
     debugPrint('MARK: ${markers[0].point.latitude}');
 
     return markers;
+  }
+
+  Stream<LocationModel> getLocationByName(String name) {
+    return _locationsRepository.getLocationByName(name);
   }
 }
