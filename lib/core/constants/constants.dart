@@ -15,10 +15,11 @@ class Constants {
   //
   static const alimID = 'lWJsCV7sRxR1aUny1HZH85nahC62';
   static const hijra = 'هِجْرَة';
+  static const apiKey =
+      '5b3ce3597851110001cf62481dc49b88408246759695a23512bbe1f2';
 
   // Text Styles
   static const heading1 = TextStyle(fontSize: 40, fontWeight: FontWeight.bold);
-
   static const heading2 = TextStyle(fontSize: 25, fontWeight: FontWeight.bold);
   static const heading3 = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
 }

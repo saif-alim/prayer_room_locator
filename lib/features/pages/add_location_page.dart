@@ -34,13 +34,14 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
         //Coordinates
         double.parse(locationXController.text.trim()),
         double.parse(locationYController.text.trim()),
-        //
 
+        //Trim extra characters
         locationNameController.text.trim(),
         detailsController.text.trim(),
         context);
   }
 
+  // clear text fields
   void clearFields() {
     locationNameController.clear();
     locationXController.clear();
@@ -58,47 +59,50 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
           ? const Loader()
           : Padding(
               padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 80,
-                  ),
-                  const Text('Want to add your prayer space?',
-                      style: Constants.heading1),
-                  const SizedBox(height: 5),
-                  const Text(
-                      'Submit the details here and we\'ll be in touch to verify'),
-                  const SizedBox(height: 20),
-                  //
-                  CustomTextField(
-                    controller: locationNameController,
-                    hintText: 'Name',
-                  ),
-                  //
-                  const Text('Coordinates:'),
-                  CustomTextField(
-                    controller: locationXController,
-                    hintText: 'X Coordinate',
-                    numbersOnly: true,
-                  ),
-                  CustomTextField(
-                    controller: locationYController,
-                    hintText: 'Y Coordinate',
-                    numbersOnly: true,
-                  ),
-                  //
-                  CustomTextField(
-                    controller: detailsController,
-                    hintText: 'Extra Details',
-                  ),
-                  CustomButton(
-                      onTap: () {
-                        addLocation();
-                        clearFields();
-                      },
-                      text: 'submit'),
-                ],
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 80,
+                    ),
+                    const Text('Want to add your prayer space?',
+                        style: Constants.heading1),
+                    const SizedBox(height: 5),
+                    const Text(
+                        'Submit the details here and we\'ll be in touch to verify'),
+                    const SizedBox(height: 20),
+                    //
+                    CustomTextField(
+                      controller: locationNameController,
+                      hintText: 'Name',
+                    ),
+                    //
+                    const Text('Coordinates:'),
+                    CustomTextField(
+                      controller: locationXController,
+                      hintText: 'X Coordinate',
+                      numbersOnly: true,
+                    ),
+                    CustomTextField(
+                      controller: locationYController,
+                      hintText: 'Y Coordinate',
+                      numbersOnly: true,
+                    ),
+                    //
+                    CustomTextField(
+                      controller: detailsController,
+                      hintText: 'Extra Details',
+                    ),
+                    CustomButton(
+                        onTap: () {
+                          addLocation();
+                          clearFields();
+                        },
+                        text: 'submit'),
+                  ],
+                ),
               ),
             ),
     );

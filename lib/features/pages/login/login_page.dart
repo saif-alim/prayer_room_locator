@@ -5,6 +5,7 @@ import 'package:prayer_room_locator/core/common/loader.dart';
 import 'package:prayer_room_locator/core/constants/constants.dart';
 import 'package:prayer_room_locator/features/auth/controller/auth_controller.dart';
 import 'package:prayer_room_locator/widgets/custom_button.dart';
+import 'package:routemaster/routemaster.dart';
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
@@ -32,7 +33,7 @@ class LoginPage extends ConsumerWidget {
                   // Email Login
                   CustomButton(
                     onTap: () {
-                      Navigator.pushNamed(context, '/emailPasswordLoginPage');
+                      Routemaster.of(context).push('/login');
                     },
                     text: 'Sign In',
                   ),
@@ -45,7 +46,7 @@ class LoginPage extends ConsumerWidget {
                   // Email Sign Up
                   CustomButton(
                     onTap: () {
-                      Navigator.pushNamed(context, '/emailPasswordSignupPage');
+                      Routemaster.of(context).push('/signup');
                     },
                     text: 'Don\'t have an account? Sign up',
                   ),

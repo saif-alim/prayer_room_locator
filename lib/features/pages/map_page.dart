@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_shadow/flutter_icon_shadow.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -6,12 +8,16 @@ import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:prayer_room_locator/core/common/custom_widgets.dart';
 import 'package:prayer_room_locator/core/common/loader.dart';
+import 'package:prayer_room_locator/core/constants/constants.dart';
 import 'package:prayer_room_locator/repository/controller/locations_controller.dart';
+import 'package:http/http.dart' as http;
 
+// ignore: must_be_immutable
 class MapPage extends ConsumerWidget {
   MapPage({super.key});
 
   late final MapController mapController = MapController();
+  List<LatLng> points = [];
 
   //functions and methods
   //
@@ -25,9 +31,6 @@ class MapPage extends ConsumerWidget {
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
       return Future.error('Location services are disabled.');
     }
 
@@ -35,11 +38,6 @@ class MapPage extends ConsumerWidget {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
         return Future.error('Location permissions are denied');
       }
     }
@@ -63,6 +61,26 @@ class MapPage extends ConsumerWidget {
       LatLng(position.latitude, position.longitude),
       17.0,
     );
+  }
+
+  getRouteUrl(String startPoint, String endPoint) {
+    const apiKey = Constants.apiKey;
+    return Uri.parse(
+        'https://api.openrouteservice.org/v2/directions/foot-walking?api_key=$apiKey&start=$startPoint&end=$endPoint');
+  }
+
+  void getCoordinates(LatLng start, LatLng end) async {
+    final startPoint = '${start.latitude},${start.longitude}';
+    final endPoint = '${end.latitude},${end.longitude}';
+    var response = await http.get(getRouteUrl(startPoint, endPoint));
+    List listOfPoints = [];
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      listOfPoints = data['features'][0]['geometry']['coordinates'];
+      points = listOfPoints
+          .map((e) => LatLng(e[1].toDouble, e[0].toDouble()))
+          .toList();
+    }
   }
 
   @override
@@ -102,6 +120,16 @@ class MapPage extends ConsumerWidget {
                     markers: markers,
                   );
                 },
+              ),
+              PolylineLayer(
+                polylineCulling: false,
+                polylines: [
+                  Polyline(
+                    points: points,
+                    color: const Color.fromARGB(255, 43, 103, 45),
+                    strokeWidth: 5,
+                  ),
+                ],
               ),
             ],
           ),
