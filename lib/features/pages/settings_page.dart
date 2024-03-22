@@ -14,7 +14,6 @@ class SettingsPage extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
-          //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               'Settings',
@@ -23,12 +22,6 @@ class SettingsPage extends ConsumerWidget {
             const SizedBox(height: 10),
             // settings tiles
             const Text('Account Settings', style: Constants.heading3),
-            ListTile(
-              title: const Text('Change Password'),
-              onTap: () {
-                // Add navigation logic to change password page
-              },
-            ),
             ListTile(
                 title: const Text('Logout'),
                 onTap: () {

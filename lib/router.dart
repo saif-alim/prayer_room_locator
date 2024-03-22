@@ -24,9 +24,9 @@ final loggedInRoute = RouteMap(routes: {
   '/settings': (_) => const MaterialPage(child: SettingsPage()),
   '/listview': (_) => const MaterialPage(child: LocationsListView()),
   '/addlocation': (_) => const MaterialPage(child: AddLocationPage()),
-  '/location/:name': (route) => MaterialPage(
+  '/location/:id': (route) => MaterialPage(
         child: LocationDetailsPage(
-          name: route.pathParameters['name']!,
+          id: route.pathParameters['id']!,
         ),
       ),
 });

@@ -4,10 +4,17 @@ import 'package:prayer_room_locator/core/common/custom_widgets.dart';
 import 'package:prayer_room_locator/core/common/error_text.dart';
 import 'package:prayer_room_locator/core/common/loader.dart';
 import 'package:prayer_room_locator/core/constants/constants.dart';
+import 'package:prayer_room_locator/models/location_model.dart';
 import 'package:prayer_room_locator/repository/controller/locations_controller.dart';
+import 'package:routemaster/routemaster.dart';
 
 class LocationsListView extends ConsumerWidget {
   const LocationsListView({super.key});
+
+  //functions
+  void navigateToLocationPage(BuildContext context, LocationModel location) {
+    Routemaster.of(context).push('/location/${location.id}');
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,6 +42,7 @@ class LocationsListView extends ConsumerWidget {
                             subtitle: Text('x: ${location.x} y: ${location.y}'),
                             onTap: () {
                               // logic for redirecting to location details page.
+                              navigateToLocationPage(context, location);
                             },
                           );
                         })),

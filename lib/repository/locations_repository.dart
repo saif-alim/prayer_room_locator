@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:prayer_room_locator/core/constants/firebase_constants.dart';
@@ -32,17 +33,19 @@ class LocationsRepository {
         .where('isVerified', isEqualTo: true)
         .snapshots()
         .map((event) {
+      debugPrint('the event docs: ${event.docs.length}');
       List<LocationModel> locations = [];
       for (var doc in event.docs) {
         locations
             .add(LocationModel.fromMap(doc.data() as Map<String, dynamic>));
       }
+      debugPrint('LOCATIONS LENGTH FROM REPO: ${locations.length}');
       return locations;
     });
   }
 
-  Stream<LocationModel> getLocationByName(String name) {
-    return _locations.doc(name).snapshots().map(
+  Stream<LocationModel> getLocationById(String id) {
+    return _locations.doc(id).snapshots().map(
         (event) => LocationModel.fromMap(event.data() as Map<String, dynamic>));
   }
 

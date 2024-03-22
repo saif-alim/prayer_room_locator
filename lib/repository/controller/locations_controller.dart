@@ -27,17 +27,14 @@ final locationsControllerProvider =
       locationsRepository: locationsRepository, ref: ref);
 });
 
-final getLocationByNameProvider = StreamProvider.family((ref, String name) {
-  return ref
-      .watch(locationsControllerProvider.notifier)
-      .getLocationByName(name);
+final getLocationByIdProvider = StreamProvider.family((ref, String id) {
+  return ref.watch(locationsControllerProvider.notifier).getLocationById(id);
 });
 
 //
 class LocationsController extends StateNotifier<bool> {
   final LocationsRepository _locationsRepository;
   final Ref _ref;
-  // final List<Marker> _markers = [];
 
   LocationsController(
       {required LocationsRepository locationsRepository, required Ref ref})
@@ -50,7 +47,7 @@ class LocationsController extends StateNotifier<bool> {
     state = true;
     final uid = _ref.read(userProvider)?.uid ?? '';
     LocationModel locationModel = LocationModel(
-      id: name,
+      id: name.replaceAll(" ", ""),
       x: x,
       y: y,
       name: name,
@@ -89,15 +86,12 @@ class LocationsController extends StateNotifier<bool> {
         ),
       );
     }
-    // _markers.clear();
-    // buildMarkers();
     debugPrint('MARK LENGTH: ${markers.length}');
-    debugPrint('MARK: ${markers[0].point.latitude}');
 
     return markers;
   }
 
-  Stream<LocationModel> getLocationByName(String name) {
-    return _locationsRepository.getLocationByName(name);
+  Stream<LocationModel> getLocationById(String name) {
+    return _locationsRepository.getLocationById(name);
   }
 }

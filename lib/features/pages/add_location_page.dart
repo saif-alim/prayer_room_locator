@@ -72,12 +72,13 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
                     const SizedBox(height: 5),
                     const Text(
                         'Submit the details here and we\'ll be in touch to verify'),
-                    const SizedBox(height: 20),
+
                     //
                     CustomTextField(
                       controller: locationNameController,
                       hintText: 'Name',
                     ),
+                    const SizedBox(height: 10),
                     //
                     const Text('Coordinates:'),
                     CustomTextField(
@@ -94,6 +95,7 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
                     CustomTextField(
                       controller: detailsController,
                       hintText: 'Extra Details',
+                      maxLines: 5,
                     ),
                     CustomButton(
                         onTap: () {

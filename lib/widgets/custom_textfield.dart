@@ -5,12 +5,14 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool numbersOnly;
+  final int maxLines;
 
   const CustomTextField({
     Key? key,
     required this.controller,
     required this.hintText,
     bool numbersOnly = false,
+    this.maxLines = 1,
     // ignore: prefer_initializing_formals
   })  : numbersOnly = numbersOnly,
         super(key: key);
@@ -19,6 +21,7 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      maxLines: maxLines,
       keyboardType: numbersOnly
           ? const TextInputType.numberWithOptions(decimal: true, signed: true)
           : null,
