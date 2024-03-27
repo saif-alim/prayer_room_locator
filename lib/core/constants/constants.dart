@@ -23,3 +23,11 @@ class Constants {
   static const heading2 = TextStyle(fontSize: 25, fontWeight: FontWeight.bold);
   static const heading3 = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
 }
+
+class FirebaseConstants {
+  static const usersCollection = 'users';
+  static const communitiesCollection = 'communities';
+  static const locationsCollection = 'locations';
+  static const postsCollection = 'posts';
+  static const commentsCollection = 'comments';
+}

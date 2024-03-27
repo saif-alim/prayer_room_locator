@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_shadow/flutter_icon_shadow.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -7,17 +5,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:prayer_room_locator/core/common/custom_widgets.dart';
-import 'package:prayer_room_locator/core/common/loader.dart';
-import 'package:prayer_room_locator/core/constants/constants.dart';
-import 'package:prayer_room_locator/repository/controller/locations_controller.dart';
-import 'package:http/http.dart' as http;
+import 'package:prayer_room_locator/locations/locations_repository.dart';
+import 'package:prayer_room_locator/models/location_model.dart';
+import 'package:routemaster/routemaster.dart';
 
-// ignore: must_be_immutable
 class MapPage extends ConsumerWidget {
   MapPage({super.key});
 
   late final MapController mapController = MapController();
-  List<LatLng> points = [];
+  final List<Marker> markersList = [];
 
   //functions and methods
   //
@@ -63,28 +59,40 @@ class MapPage extends ConsumerWidget {
     );
   }
 
-  getRouteUrl(String startPoint, String endPoint) {
-    const apiKey = Constants.apiKey;
-    return Uri.parse(
-        'https://api.openrouteservice.org/v2/directions/foot-walking?api_key=$apiKey&start=$startPoint&end=$endPoint');
-  }
+  final locationsListProvider = Provider<Stream<List<LocationModel>>>((ref) {
+    final locationsRepository = ref.watch(locationsRepositoryProvider);
+    return locationsRepository.getLocations();
+  });
 
-  void getCoordinates(LatLng start, LatLng end) async {
-    final startPoint = '${start.latitude},${start.longitude}';
-    final endPoint = '${end.latitude},${end.longitude}';
-    var response = await http.get(getRouteUrl(startPoint, endPoint));
-    List listOfPoints = [];
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      listOfPoints = data['features'][0]['geometry']['coordinates'];
-      points = listOfPoints
-          .map((e) => LatLng(e[1].toDouble, e[0].toDouble()))
-          .toList();
+  void buildMarkers(BuildContext context, WidgetRef ref) async {
+    final locationsStream = ref.watch(locationsListProvider);
+    final locations = await locationsStream.first;
+
+    markersList.clear();
+
+    for (var location in locations) {
+      markersList.add(
+        Marker(
+          point: LatLng(location.x, location.y),
+          child: GestureDetector(
+            onTap: () {
+              // navigation logic
+              Routemaster.of(context).push('/location/${location.id}');
+            },
+            child: const Icon(
+              Icons.location_pin,
+              color: Color.fromARGB(255, 255, 80, 67),
+              size: 40,
+            ),
+          ),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    buildMarkers(context, ref);
     return Scaffold(
       appBar: const CustomAppBar(),
       drawer: const CustomDrawer(),
@@ -106,30 +114,24 @@ class MapPage extends ConsumerWidget {
               ),
               // Marker Layer code
               //
-              FutureBuilder(
-                future: ref.watch(markerProvider),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Loader();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
-                  final markers = snapshot.data!;
-                  return MarkerLayer(
-                    alignment: Alignment.topCenter,
-                    markers: markers,
-                  );
-                },
-              ),
-              PolylineLayer(
-                polylineCulling: false,
-                polylines: [
-                  Polyline(
-                    points: points,
-                    color: const Color.fromARGB(255, 43, 103, 45),
-                    strokeWidth: 5,
-                  ),
-                ],
+              // FutureBuilder(
+              //   future: ref.watch(markerProvider),
+              //   builder: (context, snapshot) {
+              //     if (snapshot.connectionState == ConnectionState.waiting) {
+              //       return const Loader();
+              //     } else if (snapshot.hasError) {
+              //       return Text('Error: ${snapshot.error}');
+              //     }
+              //     final markers = snapshot.data!;
+              //     return MarkerLayer(
+              //       alignment: Alignment.topCenter,
+              //       markers: markers,
+              //     );
+              //   },
+              // ),
+              MarkerLayer(
+                markers: markersList,
+                alignment: Alignment.topCenter,
               ),
             ],
           ),

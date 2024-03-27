@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:prayer_room_locator/core/common/error_text.dart';
 import 'package:prayer_room_locator/core/common/loader.dart';
-import 'package:prayer_room_locator/features/auth/controller/auth_controller.dart';
+import 'package:prayer_room_locator/features/auth/auth_controller.dart';
 import 'package:prayer_room_locator/models/user_model.dart';
-import 'package:prayer_room_locator/router.dart';
+import 'package:prayer_room_locator/core/router.dart';
 import 'package:routemaster/routemaster.dart';
 import 'firebase_options.dart';
 

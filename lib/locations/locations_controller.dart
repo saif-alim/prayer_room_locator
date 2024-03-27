@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:prayer_room_locator/core/constants/constants.dart';
-import 'package:prayer_room_locator/features/auth/controller/auth_controller.dart';
+import 'package:prayer_room_locator/features/auth/auth_controller.dart';
 import 'package:prayer_room_locator/models/location_model.dart';
-import 'package:prayer_room_locator/repository/locations_repository.dart';
-import 'package:prayer_room_locator/utils/show_snack_bar.dart';
+import 'package:prayer_room_locator/locations/locations_repository.dart';
+import 'package:prayer_room_locator/core/common/show_snack_bar.dart';
 import 'package:routemaster/routemaster.dart';
 
 final locationsProvider = StreamProvider((ref) {
@@ -14,11 +13,11 @@ final locationsProvider = StreamProvider((ref) {
   return locationsController.getLocations();
 });
 
-final markerProvider = Provider<Future<List<Marker>>>((ref) async {
-  final locationsController = ref.watch(locationsControllerProvider.notifier);
-  final markers = locationsController.buildMarkers();
-  return markers;
-});
+// final markerProvider = Provider<Future<List<Marker>>>((ref) async {
+//   final locationsController = ref.watch(locationsControllerProvider.notifier);
+//   final markers = locationsController.buildMarkers();
+//   return markers;
+// });
 
 final locationsControllerProvider =
     StateNotifierProvider<LocationsController, bool>((ref) {
@@ -69,22 +68,21 @@ class LocationsController extends StateNotifier<bool> {
     return _locationsRepository.getLocations();
   }
 
-  Future<List<Marker>> buildMarkers() async {
+  Future<List<Marker>> buildMarkers(BuildContext context) async {
     final locations = await getLocations().first;
 
     final List<Marker> markers = [];
 
     for (var location in locations) {
-      markers.add(
-        Marker(
-          point: LatLng(location.x, location.y),
-          child: const Icon(
-            Icons.location_pin,
-            color: Color.fromARGB(255, 255, 80, 67),
-            size: 40,
-          ),
-        ),
-      );
+      markers.add(Marker(
+        markerId: MarkerId(location.id),
+        position: LatLng(location.x, location.y),
+        onTap: () {
+          // logic for navigating
+          Routemaster.of(context).push('/location/${location.id}');
+        },
+        icon: BitmapDescriptor.defaultMarker,
+      ));
     }
     debugPrint('MARK LENGTH: ${markers.length}');
 

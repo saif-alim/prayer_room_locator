@@ -5,7 +5,7 @@ import 'package:prayer_room_locator/core/common/error_text.dart';
 import 'package:prayer_room_locator/core/common/loader.dart';
 import 'package:prayer_room_locator/core/constants/constants.dart';
 import 'package:prayer_room_locator/models/location_model.dart';
-import 'package:prayer_room_locator/repository/controller/locations_controller.dart';
+import 'package:prayer_room_locator/locations/locations_controller.dart';
 import 'package:routemaster/routemaster.dart';
 
 class LocationsListView extends ConsumerWidget {

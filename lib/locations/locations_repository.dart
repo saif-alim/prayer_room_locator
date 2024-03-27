@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:prayer_room_locator/core/constants/firebase_constants.dart';
+import 'package:prayer_room_locator/core/constants/constants.dart';
 import 'package:prayer_room_locator/core/failure.dart';
 import 'package:prayer_room_locator/core/providers/firebase_providers.dart';
 import 'package:prayer_room_locator/core/type_defs.dart';
@@ -33,7 +33,6 @@ class LocationsRepository {
         .where('isVerified', isEqualTo: true)
         .snapshots()
         .map((event) {
-      debugPrint('the event docs: ${event.docs.length}');
       List<LocationModel> locations = [];
       for (var doc in event.docs) {
         locations

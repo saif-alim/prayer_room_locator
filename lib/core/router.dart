@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:prayer_room_locator/features/pages/add_location_page.dart';
+import 'package:prayer_room_locator/features/pages/google_map_page.dart';
 import 'package:prayer_room_locator/features/pages/location_details_page.dart';
 import 'package:prayer_room_locator/features/pages/locations_list_view.dart';
 import 'package:prayer_room_locator/features/pages/login/login_email_password.dart';
 import 'package:prayer_room_locator/features/pages/login/login_page.dart';
 import 'package:prayer_room_locator/features/pages/login/signup_email_password_page.dart';
-import 'package:prayer_room_locator/features/pages/map_page.dart';
 import 'package:prayer_room_locator/features/pages/profile_page.dart';
 import 'package:prayer_room_locator/features/pages/settings_page.dart';
 import 'package:routemaster/routemaster.dart';
@@ -19,7 +19,7 @@ final loggedOutRoute = RouteMap(routes: {
 
 //loggedIn
 final loggedInRoute = RouteMap(routes: {
-  '/': (_) => MaterialPage(child: MapPage()),
+  '/': (_) => const MaterialPage(child: GMapPage()),
   '/profile': (_) => const MaterialPage(child: ProfilePage()),
   '/settings': (_) => const MaterialPage(child: SettingsPage()),
   '/listview': (_) => const MaterialPage(child: LocationsListView()),
