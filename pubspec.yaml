@@ -59,6 +59,8 @@ dependencies:
   routemaster: ^1.0.1
   http: ^1.2.1
   google_maps_flutter: ^2.6.0
+  file_picker: ^8.0.0+1
+  location: ^5.0.3
 
 dev_dependencies:
   flutter_test:

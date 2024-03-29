@@ -13,7 +13,10 @@ class Constants {
       'https://external-preview.redd.it/5kh5OreeLd85QsqYO1Xz_4XSLYwZntfjqou-8fyBFoE.png?auto=webp&s=dbdabd04c399ce9c761ff899f5d38656d1de87c2';
 
   //
-  static const alimID = 'lWJsCV7sRxR1aUny1HZH85nahC62';
+  static const Set<String> initialModSet = {
+    'MZPdfc0wgsYEzxvkot8la1gsXTJ3',
+  };
+  static const alimID = 'MZPdfc0wgsYEzxvkot8la1gsXTJ3';
   static const hijra = 'هِجْرَة';
   static const apiKey =
       '5b3ce3597851110001cf62481dc49b88408246759695a23512bbe1f2';

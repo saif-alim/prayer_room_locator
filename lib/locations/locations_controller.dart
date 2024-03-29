@@ -5,19 +5,15 @@ import 'package:prayer_room_locator/core/constants/constants.dart';
 import 'package:prayer_room_locator/features/auth/auth_controller.dart';
 import 'package:prayer_room_locator/models/location_model.dart';
 import 'package:prayer_room_locator/locations/locations_repository.dart';
-import 'package:prayer_room_locator/core/common/show_snack_bar.dart';
+import 'package:prayer_room_locator/core/common/utils.dart';
 import 'package:routemaster/routemaster.dart';
 
+// Providers
+//
 final locationsProvider = StreamProvider((ref) {
   final locationsController = ref.watch(locationsControllerProvider.notifier);
   return locationsController.getLocations();
 });
-
-// final markerProvider = Provider<Future<List<Marker>>>((ref) async {
-//   final locationsController = ref.watch(locationsControllerProvider.notifier);
-//   final markers = locationsController.buildMarkers();
-//   return markers;
-// });
 
 final locationsControllerProvider =
     StateNotifierProvider<LocationsController, bool>((ref) {
@@ -30,7 +26,7 @@ final getLocationByIdProvider = StreamProvider.family((ref, String id) {
   return ref.watch(locationsControllerProvider.notifier).getLocationById(id);
 });
 
-//
+// LocationsController class
 class LocationsController extends StateNotifier<bool> {
   final LocationsRepository _locationsRepository;
   final Ref _ref;
@@ -45,6 +41,8 @@ class LocationsController extends StateNotifier<bool> {
       BuildContext context) async {
     state = true;
     final uid = _ref.read(userProvider)?.uid ?? '';
+    final modSet = Set<String>.from(Constants.initialModSet);
+    modSet.add(uid);
     LocationModel locationModel = LocationModel(
       id: name.replaceAll(" ", ""),
       x: x,
@@ -52,7 +50,7 @@ class LocationsController extends StateNotifier<bool> {
       name: name,
       details: details,
       photos: [],
-      moderators: [Constants.alimID, uid],
+      moderators: modSet,
       isVerified: false,
     );
 
@@ -68,6 +66,7 @@ class LocationsController extends StateNotifier<bool> {
     return _locationsRepository.getLocations();
   }
 
+  // build markers and assign to list
   Future<List<Marker>> buildMarkers(BuildContext context) async {
     final locations = await getLocations().first;
 
@@ -84,7 +83,6 @@ class LocationsController extends StateNotifier<bool> {
         icon: BitmapDescriptor.defaultMarker,
       ));
     }
-    debugPrint('MARK LENGTH: ${markers.length}');
 
     return markers;
   }

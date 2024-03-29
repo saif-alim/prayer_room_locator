@@ -11,7 +11,7 @@ class LocationModel {
   final String name;
   final String details;
   final List<String> photos;
-  final List<String> moderators;
+  final Set<String> moderators;
   final bool isVerified;
   LocationModel({
     required this.id,
@@ -31,7 +31,7 @@ class LocationModel {
     String? name,
     String? details,
     List<String>? photos,
-    List<String>? moderators,
+    Set<String>? moderators,
     bool? isVerified,
   }) {
     return LocationModel(
@@ -66,10 +66,8 @@ class LocationModel {
       y: map['y'].toDouble() as double,
       name: map['name'] as String,
       details: map['details'] as String,
-      // photos: List<String>.from((map['photos'] as List<String>)),
       photos: (map['photos'] as List).cast<String>(),
-      // moderators: List<String>.from((map['moderators'] as List<String>)),
-      moderators: (map['photos'] as List).cast<String>(),
+      moderators: (map['moderators'] as List<dynamic>).cast<String>().toSet(),
       isVerified: map['isVerified'] as bool,
     );
   }
@@ -89,7 +87,7 @@ class LocationModel {
         other.name == name &&
         other.details == details &&
         listEquals(other.photos, photos) &&
-        listEquals(other.moderators, moderators) &&
+        setEquals(other.moderators, moderators) &&
         other.isVerified == isVerified;
   }
 

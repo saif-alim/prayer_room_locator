@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/features/auth/auth_repository.dart';
 import 'package:prayer_room_locator/models/user_model.dart';
-import 'package:prayer_room_locator/core/common/show_snack_bar.dart';
+import 'package:prayer_room_locator/core/common/utils.dart';
 
 final userProvider = StateProvider<UserModel?>((ref) => null);
 
@@ -43,6 +43,10 @@ class AuthController extends StateNotifier<bool> {
         (l) => showSnackBar(context, l.message),
         (userModel) =>
             _ref.read(userProvider.notifier).update((state) => userModel));
+  }
+
+  void logOut() async {
+    _authRepository.logOut();
   }
 
   Stream<UserModel> getUserData(String uid) {

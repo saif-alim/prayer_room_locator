@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/core/common/custom_widgets.dart';
 import 'package:prayer_room_locator/core/constants/constants.dart';
+import 'package:prayer_room_locator/features/auth/auth_controller.dart';
+import 'package:routemaster/routemaster.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
+
+  void logOut(WidgetRef ref, BuildContext context) {
+    ref.read(authControllerProvider.notifier).logOut();
+    Routemaster.of(context).push('/');
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,10 +30,18 @@ class SettingsPage extends ConsumerWidget {
             // settings tiles
             const Text('Account Settings', style: Constants.heading3),
             ListTile(
-                title: const Text('Logout'),
-                onTap: () {
-                  // Add logic to handle logout
-                }),
+              leading: const Icon(
+                Icons.logout,
+                color: Color.fromARGB(255, 220, 77, 66),
+              ),
+              title: const Text(
+                'Logout',
+              ),
+              onTap: () {
+                // logic to handle logout
+                logOut(ref, context);
+              },
+            ),
           ],
         ),
       ),

@@ -41,6 +41,7 @@ class ProfilePage extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
             ListTile(
+              leading: const Icon(Icons.settings),
               title: const Text('Settings'),
               onTap: () {
                 //
@@ -50,23 +51,11 @@ class ProfilePage extends ConsumerWidget {
             const SizedBox(height: 10),
             // new location
             ListTile(
+              leading: const Icon(Icons.question_mark),
               title: const Text('Request a New Location'),
               onTap: () {
                 //
                 Routemaster.of(context).push('/addlocation');
-              },
-            ),
-            const SizedBox(height: 10),
-            ListTile(
-              title: const Text(
-                'Logout',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 220, 77, 66),
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              onTap: () {
-                // logic to handle logout
               },
             ),
           ],
