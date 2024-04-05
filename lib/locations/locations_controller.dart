@@ -37,21 +37,22 @@ class LocationsController extends StateNotifier<bool> {
         _ref = ref,
         super(false);
 
-  void addLocation(double x, double y, String name, String details,
-      BuildContext context) async {
+  void addLocation(double latitude, double longitude, String name,
+      String details, BuildContext context) async {
     state = true;
     final uid = _ref.read(userProvider)?.uid ?? '';
     final modSet = Set<String>.from(Constants.initialModSet);
     modSet.add(uid);
     LocationModel locationModel = LocationModel(
       id: name.replaceAll(" ", ""),
-      x: x,
-      y: y,
+      latitude: latitude,
+      longitude: longitude,
       name: name,
       details: details,
       photos: [],
       moderators: modSet,
       isVerified: false,
+      amenities: [],
     );
 
     final result = await _locationsRepository.addLocation(locationModel);
@@ -75,7 +76,7 @@ class LocationsController extends StateNotifier<bool> {
     for (var location in locations) {
       markers.add(Marker(
         markerId: MarkerId(location.id),
-        position: LatLng(location.x, location.y),
+        position: LatLng(location.latitude, location.longitude),
         onTap: () {
           // logic for navigating
           Routemaster.of(context).push('/location/${location.id}');

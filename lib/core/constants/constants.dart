@@ -5,6 +5,11 @@ class Constants {
   static const logoPath = 'assets/images/circleLogo.png';
   static const googlePath = 'assets/images/google.png';
   static const loginEmotePath = 'assets/images/mosque.png';
+  static const locationIconPath = 'assets/images/locationIcon.png';
+
+  static const femaleIconPath = 'assets/anemities/female.png';
+  static const parkingIconPath = 'assets/anemities/parking.png';
+  static const wudhuIconPath = 'assets/anemities/wudhu.png';
 
   // Default Images
   static const bannerDefault =
@@ -12,14 +17,10 @@ class Constants {
   static const avatarDefault =
       'https://external-preview.redd.it/5kh5OreeLd85QsqYO1Xz_4XSLYwZntfjqou-8fyBFoE.png?auto=webp&s=dbdabd04c399ce9c761ff899f5d38656d1de87c2';
 
-  //
-  static const Set<String> initialModSet = {
-    'MZPdfc0wgsYEzxvkot8la1gsXTJ3',
-  };
+  // titles and IDs
   static const alimID = 'MZPdfc0wgsYEzxvkot8la1gsXTJ3';
   static const hijra = 'هِجْرَة';
-  static const apiKey =
-      '5b3ce3597851110001cf62481dc49b88408246759695a23512bbe1f2';
+  static const Set<String> initialModSet = {alimID};
 
   // Text Styles
   static const heading1 = TextStyle(fontSize: 40, fontWeight: FontWeight.bold);
@@ -29,8 +30,6 @@ class Constants {
 
 class FirebaseConstants {
   static const usersCollection = 'users';
-  static const communitiesCollection = 'communities';
   static const locationsCollection = 'locations';
-  static const postsCollection = 'posts';
   static const commentsCollection = 'comments';
 }

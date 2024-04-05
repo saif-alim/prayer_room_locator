@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prayer_room_locator/features/pages/locations/add_location_page.dart';
-import 'package:prayer_room_locator/features/pages/google_map_page.dart';
+import 'package:prayer_room_locator/features/pages/map_page.dart';
 import 'package:prayer_room_locator/features/pages/locations/add_moderator_page.dart';
 import 'package:prayer_room_locator/features/pages/locations/edit_location_details.dart';
 import 'package:prayer_room_locator/features/pages/locations/location_details_page.dart';
@@ -22,7 +22,7 @@ final loggedOutRoute = RouteMap(routes: {
 
 //loggedIn
 final loggedInRoute = RouteMap(routes: {
-  '/': (_) => const MaterialPage(child: GMapPage()),
+  '/': (_) => const MaterialPage(child: MapPage()),
   '/profile': (_) => const MaterialPage(child: ProfilePage()),
   '/settings': (_) => const MaterialPage(child: SettingsPage()),
   '/listview': (_) => const MaterialPage(child: LocationsListView()),

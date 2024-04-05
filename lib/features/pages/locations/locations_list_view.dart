@@ -79,14 +79,14 @@ class LocationsListView extends ConsumerWidget {
                           final distanceA = Geolocator.distanceBetween(
                             userLocation.latitude,
                             userLocation.longitude,
-                            a.x,
-                            a.y,
+                            a.latitude,
+                            a.longitude,
                           );
                           final distanceB = Geolocator.distanceBetween(
                             userLocation.latitude,
                             userLocation.longitude,
-                            b.x,
-                            b.y,
+                            b.latitude,
+                            b.longitude,
                           );
                           return distanceA.compareTo(distanceB);
                         });
@@ -99,8 +99,8 @@ class LocationsListView extends ConsumerWidget {
                                 final location = locations[index];
                                 return ListTile(
                                   title: Text(location.name),
-                                  subtitle:
-                                      Text('x: ${location.x} y: ${location.y}'),
+                                  subtitle: Text(
+                                      'x: ${location.latitude} y: ${location.longitude}'),
                                   onTap: () {
                                     navigateToLocationPage(context, location);
                                   },

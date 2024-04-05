@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/core/common/custom_widgets.dart';
+import 'package:prayer_room_locator/core/constants/constants.dart';
 import 'package:prayer_room_locator/features/auth/auth_controller.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -19,11 +20,7 @@ class ProfilePage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(
-                  'https://via.placeholder.com/150'), // Add user profile image URL
-            ),
+            const Text('User Profile', style: Constants.heading1),
             const SizedBox(height: 20),
             Text(
               user.name, // user's name

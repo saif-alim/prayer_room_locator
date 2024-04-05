@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/core/common/custom_widgets.dart';
 import 'package:prayer_room_locator/core/common/error_text.dart';
@@ -48,28 +49,44 @@ class LocationDetailsPage extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('latitude: ${location.x}'),
-                      Text('longitude: ${location.y}'),
+                      Text('latitude: ${location.latitude}'),
+                      Text('longitude: ${location.longitude}'),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Text('Photos', style: Constants.heading2),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        Container(width: 160, color: Colors.purple),
-                        const SizedBox(width: 5),
-                        Container(width: 160, color: Colors.purple),
-                        const SizedBox(width: 5),
-                        Container(width: 160, color: Colors.purple),
-                        const SizedBox(width: 5),
-                      ],
-                    ),
-                  ),
+                  // const Text('Photos', style: Constants.heading2),
+                  // SizedBox(
+                  //   height: MediaQuery.of(context).size.height * 0.2,
+                  //   child: ListView(
+                  //     scrollDirection: Axis.horizontal,
+                  //     children: [
+                  //       Container(width: 160, color: Colors.purple),
+                  //       const SizedBox(width: 5),
+                  //       Container(width: 160, color: Colors.purple),
+                  //       const SizedBox(width: 5),
+                  //       Container(width: 160, color: Colors.purple),
+                  //       const SizedBox(width: 5),
+                  //     ],
+                  //   ),
+                  // ),
                   const Text('Details', style: Constants.heading2),
                   Text(location.details),
+                  const SizedBox(height: 20),
+                  // Grid
+                  const Text('Amenities', style: Constants.heading2),
+                  SizedBox(
+                    height: 500,
+                    child: GridView.builder(
+                      itemCount: location.amenities.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3),
+                      itemBuilder: (context, index) {
+                        return AmenitiesTile(
+                            amenityType: location.amenities[index]);
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -1,25 +1,89 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_icon_shadow/flutter_icon_shadow.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:prayer_room_locator/core/common/custom_widgets.dart';
-import 'package:prayer_room_locator/locations/locations_repository.dart';
-import 'package:prayer_room_locator/models/location_model.dart';
-import 'package:routemaster/routemaster.dart';
+import 'package:prayer_room_locator/locations/locations_controller.dart';
 
-class MapPage extends ConsumerWidget {
-  MapPage({super.key});
+class MapPage extends ConsumerStatefulWidget {
+  const MapPage({Key? key}) : super(key: key);
 
-  late final MapController mapController = MapController();
-  final List<Marker> markersList = [];
+  @override
+  MapPageState createState() => MapPageState();
+}
 
-  //functions and methods
+class MapPageState extends ConsumerState<MapPage> {
+  final Completer<GoogleMapController> mapController = Completer();
+  Set<Marker> _markers = {};
+  StreamSubscription<Position>? positionStream;
+
+  @override
+  void initState() {
+    super.initState();
+    _initMapAndMarkers();
+    _initPositionStream();
+  }
+
+  // functions and methods
+
+  @override
+  void dispose() {
+    super.dispose();
+    positionStream?.cancel();
+  }
+
+  // initialises position stream
+  void _initPositionStream() {
+    const locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.bestForNavigation,
+    );
+
+    positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((position) {
+      _updatePositionMarker(position);
+      debugPrint('init position streamed');
+      // _moveToPosition(position);
+    });
+  }
+
+  // update the marker for user's current position
+  void _updatePositionMarker(Position position, {bool initial = false}) async {
+    setState(() {
+      _markers.removeWhere(
+          (marker) => marker.markerId == const MarkerId('userPosition'));
+      _markers.add(
+        Marker(
+          markerId: const MarkerId('userPosition'),
+          position: LatLng(position.latitude, position.longitude),
+          infoWindow: const InfoWindow(title: 'Your Location'),
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueBlue), // Use the custom icon if available
+        ),
+      );
+    });
+  }
+
   //
+  Future<void> _initMapAndMarkers() async {
+    Position position = await _determinePosition();
+    _updatePositionMarker(position, initial: true);
+    await _moveToPosition(position);
+    await _getMarkers();
+  }
 
-  // get users current location after
-  // checking for permissions
+  //
+  Future<void> _getMarkers() async {
+    final locationsController = ref.read(locationsControllerProvider.notifier);
+    List<Marker> markers = await locationsController.buildMarkers(context);
+    setState(() {
+      _markers = Set.from(markers);
+    });
+  }
+
+  // Get users current location after checking for permissions
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -30,6 +94,7 @@ class MapPage extends ConsumerWidget {
       return Future.error('Location services are disabled.');
     }
 
+    // Permission handling
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -37,141 +102,47 @@ class MapPage extends ConsumerWidget {
         return Future.error('Location permissions are denied');
       }
     }
-
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
+    // Permissions are granted and we can continue accessing the position of the device.
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.bestForNavigation);
     return position;
   }
 
-  // move to a specified location
+  // Move to a specified location
   Future<void> _moveToPosition(Position position) async {
-    mapController.move(
-      LatLng(position.latitude, position.longitude),
-      17.0,
-    );
-  }
-
-  final locationsListProvider = Provider<Stream<List<LocationModel>>>((ref) {
-    final locationsRepository = ref.watch(locationsRepositoryProvider);
-    return locationsRepository.getLocations();
-  });
-
-  void buildMarkers(BuildContext context, WidgetRef ref) async {
-    final locationsStream = ref.watch(locationsListProvider);
-    final locations = await locationsStream.first;
-
-    markersList.clear();
-
-    for (var location in locations) {
-      markersList.add(
-        Marker(
-          point: LatLng(location.x, location.y),
-          child: GestureDetector(
-            onTap: () {
-              // navigation logic
-              Routemaster.of(context).push('/location/${location.id}');
-            },
-            child: const Icon(
-              Icons.location_pin,
-              color: Color.fromARGB(255, 255, 80, 67),
-              size: 40,
-            ),
-          ),
-        ),
-      );
-    }
+    final GoogleMapController controller = await mapController.future;
+    controller.animateCamera(CameraUpdate.newLatLngZoom(
+        LatLng(position.latitude, position.longitude), 14));
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    buildMarkers(context, ref);
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(),
       drawer: const CustomDrawer(),
-      //
-      body: Stack(
-        alignment: Alignment.bottomLeft,
-        children: [
-          FlutterMap(
-            mapController: mapController,
-            options: const MapOptions(
-              initialCenter: LatLng(51.5234284822, -0.039269956473),
-              initialZoom: 12,
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.example.app',
-                subdomains: const ['a', 'b', 'c'],
-              ),
-              // Marker Layer code
-              //
-              // FutureBuilder(
-              //   future: ref.watch(markerProvider),
-              //   builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return const Loader();
-              //     } else if (snapshot.hasError) {
-              //       return Text('Error: ${snapshot.error}');
-              //     }
-              //     final markers = snapshot.data!;
-              //     return MarkerLayer(
-              //       alignment: Alignment.topCenter,
-              //       markers: markers,
-              //     );
-              //   },
-              // ),
-              MarkerLayer(
-                markers: markersList,
-                alignment: Alignment.topCenter,
-              ),
-            ],
-          ),
-          // Location Button
-          //
-          Positioned(
-            bottom: 10,
-            right: 10,
-            child: Container(
-                alignment: Alignment.bottomLeft,
-                width: 100,
-                height: 100,
-                child: Stack(children: [
-                  const Center(
-                      child: IconShadow(
-                    Icon(
-                      Icons.circle,
-                      size: 80,
-                      color: Colors.white,
-                    ),
-                    shadowColor: Colors.black,
-                    shadowBlurSigma: 0.2,
-                  )),
-                  IconButton(
-                    onPressed: () async {
-                      // Moves the map to user's location
-                      Position position = await _determinePosition();
-                      await _moveToPosition(position);
-                    },
-                    icon: const Center(
-                      child: Icon(
-                        Icons.my_location,
-                        size: 30,
-                        color: Colors.lightBlue,
-                      ),
-                    ),
-                  ),
-                ])),
-          ),
-        ],
+      body: GoogleMap(
+        zoomControlsEnabled: false,
+        compassEnabled: true,
+        myLocationButtonEnabled: true,
+        initialCameraPosition: const CameraPosition(
+          target: LatLng(51.5080, -0.1281),
+          zoom: 10,
+        ),
+        onMapCreated: (controller) => mapController.complete(controller),
+        markers: _markers,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          Position position = await _determinePosition();
+          await _moveToPosition(position);
+        },
+        child: const Icon(Icons.my_location),
       ),
     );
   }

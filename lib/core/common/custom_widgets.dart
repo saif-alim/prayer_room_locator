@@ -32,7 +32,8 @@ class CustomDrawer extends StatelessWidget {
       child: Column(children: [
         const DrawerHeader(
           child: Center(
-            child: Text(Constants.hijra, style: TextStyle(fontSize: 20)),
+            child: Text(' ${Constants.hijra} \n Hijra',
+                style: TextStyle(fontSize: 20)),
           ),
         ),
         ListTile(
@@ -75,11 +76,9 @@ class CustomTextField extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.hintText,
-    bool numbersOnly = false,
+    this.numbersOnly = false,
     this.maxLines = 1,
-    // ignore: prefer_initializing_formals
-  })  : numbersOnly = numbersOnly,
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -136,6 +135,51 @@ class CustomButton extends StatelessWidget {
       ),
       onPressed: onTap,
       child: Text(text),
+    );
+  }
+}
+
+// Enum to define the amenity types
+enum AmenityType { wudhu, female, parking }
+
+class AmenitiesTile extends StatelessWidget {
+  const AmenitiesTile({
+    Key? key,
+    required this.amenityType,
+  }) : super(key: key);
+
+  final String amenityType;
+
+  @override
+  Widget build(BuildContext context) {
+    String imagePath;
+
+    if (amenityType == 'wudhu') {
+      //
+      imagePath = Constants.wudhuIconPath;
+    } else if (amenityType == 'female') {
+      //
+      imagePath = Constants.femaleIconPath;
+    } else if (amenityType == 'parking') {
+      //
+      imagePath = Constants.parkingIconPath;
+    } else {
+      imagePath = '';
+    }
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            Image.asset(
+              imagePath,
+              height: 40,
+            ),
+            Text(amenityType),
+          ],
+        ),
+      ),
     );
   }
 }

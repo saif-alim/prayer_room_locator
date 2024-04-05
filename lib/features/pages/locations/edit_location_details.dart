@@ -73,6 +73,7 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
                   CustomButton(
                     onTap: () {
                       // logic to save changes
+                      // location.details = locationDetailsController.text;
                     },
                     text: 'Save Changes',
                   ),

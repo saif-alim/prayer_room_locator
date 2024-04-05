@@ -26,36 +26,39 @@ class _AddModPageState extends ConsumerState<AddModPage> {
     return Scaffold(
       appBar: const CustomAppBar(),
       drawer: const CustomDrawer(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Moderators', style: Constants.heading1),
-          Expanded(
-            child: ref.watch(getLocationByIdProvider(widget.locationId)).when(
-                  data: (location) => ListView.builder(
-                    itemCount: location.moderators.length,
-                    itemBuilder: (context, index) {
-                      final modList = location.moderators.toList();
-                      final modId = modList[index];
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Moderators', style: Constants.heading1),
+            Expanded(
+              child: ref.watch(getLocationByIdProvider(widget.locationId)).when(
+                    data: (location) => ListView.builder(
+                      itemCount: location.moderators.length,
+                      itemBuilder: (context, index) {
+                        final modList = location.moderators.toList();
+                        final modId = modList[index];
 
-                      return ref.watch(getUserDataProvider(modId)).when(
-                            data: (user) {
-                              return ListTile(
-                                title: Text(user.name),
-                              );
-                            },
-                            error: ((error, stackTrace) =>
-                                ErrorText(error: error.toString())),
-                            loading: () => const Loader(),
-                          );
-                    },
+                        return ref.watch(getUserDataProvider(modId)).when(
+                              data: (user) {
+                                return ListTile(
+                                  title: Text(user.name),
+                                );
+                              },
+                              error: ((error, stackTrace) =>
+                                  ErrorText(error: error.toString())),
+                              loading: () => const Loader(),
+                            );
+                      },
+                    ),
+                    error: ((error, stackTrace) =>
+                        ErrorText(error: error.toString())),
+                    loading: () => const Loader(),
                   ),
-                  error: ((error, stackTrace) =>
-                      ErrorText(error: error.toString())),
-                  loading: () => const Loader(),
-                ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
