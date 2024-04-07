@@ -18,7 +18,7 @@ class Constants {
       'https://external-preview.redd.it/5kh5OreeLd85QsqYO1Xz_4XSLYwZntfjqou-8fyBFoE.png?auto=webp&s=dbdabd04c399ce9c761ff899f5d38656d1de87c2';
 
   // titles and IDs
-  static const alimID = 'MZPdfc0wgsYEzxvkot8la1gsXTJ3';
+  static const alimID = 'W0ZUrExYqNgWdH20DjZlOsPEDgB2';
   static const hijra = 'هِجْرَة';
   static const Set<String> initialModSet = {alimID};
 

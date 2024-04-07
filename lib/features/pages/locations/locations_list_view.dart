@@ -61,7 +61,8 @@ class LocationsListView extends ConsumerWidget {
               style: Constants.heading1,
             ),
             const SizedBox(height: 5),
-            //
+
+            // Build the list of location tiles
             FutureBuilder<Position>(
               future: _determinePosition(),
               builder: (context, snapshot) {

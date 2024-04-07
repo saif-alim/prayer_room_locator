@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/core/common/custom_widgets.dart';
 import 'package:prayer_room_locator/core/common/error_text.dart';

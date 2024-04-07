@@ -10,6 +10,11 @@ import 'package:routemaster/routemaster.dart';
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
 
+  void logOut(WidgetRef ref, BuildContext context) {
+    ref.read(authControllerProvider.notifier).logOut();
+    Routemaster.of(context).push('/');
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(authControllerProvider);
@@ -50,6 +55,12 @@ class LoginPage extends ConsumerWidget {
                     },
                     text: 'Don\'t have an account? Sign up',
                   ),
+
+                  //
+                  CustomButton(
+                    onTap: () => logOut(ref, context),
+                    text: 'log out',
+                  )
                 ],
               ),
             ),

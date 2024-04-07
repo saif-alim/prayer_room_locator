@@ -81,12 +81,12 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
                     const Text('Coordinates:'),
                     CustomTextField(
                       controller: locationXController,
-                      hintText: 'X Coordinate',
+                      hintText: 'Latitude',
                       numbersOnly: true,
                     ),
                     CustomTextField(
                       controller: locationYController,
-                      hintText: 'Y Coordinate',
+                      hintText: 'Longitude',
                       numbersOnly: true,
                     ),
                     //
