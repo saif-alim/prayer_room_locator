@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:prayer_room_locator/core/common/google_sign_in_button.dart';
-import 'package:prayer_room_locator/core/common/loader.dart';
-import 'package:prayer_room_locator/core/constants/constants.dart';
-import 'package:prayer_room_locator/features/auth/auth_controller.dart';
+import 'package:prayer_room_locator/utils/common/google_sign_in_button.dart';
+import 'package:prayer_room_locator/utils/common/loader.dart';
+import 'package:prayer_room_locator/utils/common/constants.dart';
+import 'package:prayer_room_locator/auth/auth_controller.dart';
 import 'package:routemaster/routemaster.dart';
 
 class LoginPage extends ConsumerWidget {

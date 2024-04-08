@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:prayer_room_locator/core/constants/constants.dart';
-import 'package:prayer_room_locator/core/failure.dart';
-import 'package:prayer_room_locator/core/providers/firebase_providers.dart';
-import 'package:prayer_room_locator/core/type_defs.dart';
+import 'package:prayer_room_locator/utils/common/constants.dart';
+import 'package:prayer_room_locator/utils/failure.dart';
+import 'package:prayer_room_locator/utils/providers/firebase_providers.dart';
+import 'package:prayer_room_locator/utils/type_defs.dart';
 import 'package:prayer_room_locator/models/location_model.dart';
 
 final locationsRepositoryProvider = Provider((ref) {

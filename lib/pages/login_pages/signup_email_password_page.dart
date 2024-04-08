@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prayer_room_locator/core/common/custom_widgets.dart';
-import 'package:prayer_room_locator/core/constants/constants.dart';
+import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
+import 'package:prayer_room_locator/utils/common/constants.dart';
 
 class EmailPasswordSignupPage extends StatefulWidget {
   const EmailPasswordSignupPage({super.key});

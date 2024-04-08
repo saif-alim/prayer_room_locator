@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:prayer_room_locator/core/common/custom_widgets.dart';
+import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
 import 'package:prayer_room_locator/locations/locations_controller.dart';
 
 class MapPage extends ConsumerStatefulWidget {

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:prayer_room_locator/core/constants/constants.dart';
-import 'package:prayer_room_locator/features/auth/auth_controller.dart';
+import 'package:prayer_room_locator/utils/common/constants.dart';
+import 'package:prayer_room_locator/auth/auth_controller.dart';
 import 'package:prayer_room_locator/models/location_model.dart';
 import 'package:prayer_room_locator/locations/locations_repository.dart';
-import 'package:prayer_room_locator/core/common/utils.dart';
+import 'package:prayer_room_locator/utils/common/utils.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:geolocator/geolocator.dart';
 

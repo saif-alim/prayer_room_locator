@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:prayer_room_locator/features/auth/auth_repository.dart';
+import 'package:prayer_room_locator/auth/auth_repository.dart';
 import 'package:prayer_room_locator/models/user_model.dart';
-import 'package:prayer_room_locator/core/common/utils.dart';
+import 'package:prayer_room_locator/utils/common/utils.dart';
 
 final userProvider = StateProvider<UserModel?>((ref) => null);
 
