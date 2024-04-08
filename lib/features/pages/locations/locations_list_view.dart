@@ -12,38 +12,14 @@ import 'package:routemaster/routemaster.dart';
 class LocationsListView extends ConsumerWidget {
   const LocationsListView({super.key});
 
-  //functions
+  // navigate to the relevant location details page
   void navigateToLocationPage(BuildContext context, LocationModel location) {
     Routemaster.of(context).push('/location/${location.id}');
   }
 
-  // get users current location after checking for permissions
-  Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-    // Permission handling
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    // Permissions are granted and location can be accessed
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation);
+  // get user current location
+  Future<Position> _determinePosition(WidgetRef ref) async {
+    return ref.read(locationsControllerProvider.notifier).determinePosition();
   }
 
   @override
@@ -64,7 +40,7 @@ class LocationsListView extends ConsumerWidget {
 
             // Build the list of location tiles
             FutureBuilder<Position>(
-              future: _determinePosition(),
+              future: _determinePosition(ref),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Loader(); // Show loading widget

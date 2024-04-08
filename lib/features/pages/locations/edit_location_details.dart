@@ -1,12 +1,12 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/core/common/custom_widgets.dart';
 import 'package:prayer_room_locator/core/common/error_text.dart';
 import 'package:prayer_room_locator/core/common/loader.dart';
-import 'package:prayer_room_locator/core/common/utils.dart';
 import 'package:prayer_room_locator/core/constants/constants.dart';
 import 'package:prayer_room_locator/locations/locations_controller.dart';
+import 'package:prayer_room_locator/models/location_model.dart';
+import 'package:routemaster/routemaster.dart';
 
 class EditLocationDetails extends ConsumerStatefulWidget {
   final String id;
@@ -22,7 +22,6 @@ class EditLocationDetails extends ConsumerStatefulWidget {
 
 class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
   final locationDetailsController = TextEditingController();
-  File? imageFile;
 
   @override
   void dispose() {
@@ -34,14 +33,16 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
     locationDetailsController.clear();
   }
 
-  void addImage() async {
-    final res = await pickImage();
-
-    if (res != null) {
-      setState(() {
-        imageFile = File(res.files.first.path!);
-      });
-    }
+  void saveNewDetails(
+      LocationModel location, TextEditingController detailsController) {
+    ref.read(locationsControllerProvider.notifier).editLocation(
+          locationDetails: detailsController.text,
+          location: location,
+          newModId: null,
+          newAmenities: null,
+          context: context,
+        );
+    clearFields();
   }
 
   @override
@@ -63,6 +64,16 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
                     style: Constants.heading2,
                   ),
                   const SizedBox(height: 20),
+                  // current
+                  const Text('Current Location Details:'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
+                    child: Text(location.details),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // new
                   const Text('New Location Details:'),
                   CustomTextField(
                     controller: locationDetailsController,
@@ -73,7 +84,8 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
                   CustomButton(
                     onTap: () {
                       // logic to save changes
-                      // location.details = locationDetailsController.text;
+                      saveNewDetails(location, locationDetailsController);
+                      Routemaster.of(context).push('/location/${location.id}');
                     },
                     text: 'Save Changes',
                   ),
@@ -81,7 +93,7 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
               ),
             ),
           ),
-          error: ((error, stackTrace) => ErrorText(error: error.toString())),
+          error: (error, stackTrace) => ErrorText(error: error.toString()),
           loading: () => const Loader(),
         );
   }

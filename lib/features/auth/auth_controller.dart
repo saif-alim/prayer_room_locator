@@ -24,6 +24,10 @@ final getUserDataProvider = StreamProvider.family((ref, String uid) {
   return authController.getUserData(uid);
 });
 
+final getUserByEmailProvider = StreamProvider.family((ref, String email) {
+  return ref.watch(authControllerProvider.notifier).getUserByEmail(email);
+});
+
 class AuthController extends StateNotifier<bool> {
   final AuthRepository _authRepository;
   final Ref _ref;
@@ -51,5 +55,13 @@ class AuthController extends StateNotifier<bool> {
 
   Stream<UserModel> getUserData(String uid) {
     return _authRepository.getUserData(uid);
+  }
+
+  Stream<UserModel?> getUserByEmail(String email) {
+    return _authRepository.getUserByEmail(email);
+  }
+
+  Stream<List<UserModel>> getUsers() {
+    return _authRepository.getUsers();
   }
 }

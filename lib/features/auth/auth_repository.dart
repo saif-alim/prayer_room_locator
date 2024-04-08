@@ -81,4 +81,26 @@ class AuthRepository {
     return _users.doc(uid).snapshots().map(
         (event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
   }
+
+  Stream<UserModel?> getUserByEmail(String email) {
+    return _users.doc(email).snapshots().map((event) {
+      if (event.exists && event.data() != null) {
+        return UserModel.fromMap(event.data() as Map<String, dynamic>);
+      }
+      return null;
+    });
+  }
+
+  Stream<List<UserModel>> getUsers() {
+    return _users
+        .where('isAuthenticated', isEqualTo: true)
+        .snapshots()
+        .map((event) {
+      List<UserModel> users = [];
+      for (var doc in event.docs) {
+        users.add(UserModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return users;
+    });
+  }
 }

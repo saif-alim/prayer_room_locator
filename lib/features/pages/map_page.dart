@@ -26,13 +26,13 @@ class MapPageState extends ConsumerState<MapPage> {
     _initPositionStream();
   }
 
-  // functions and methods
-
   @override
   void dispose() {
     super.dispose();
     positionStream?.cancel();
   }
+
+  // Functions and Methods
 
   // initialises position stream
   void _initPositionStream() {
@@ -49,7 +49,24 @@ class MapPageState extends ConsumerState<MapPage> {
     });
   }
 
-  // update the marker for user's current position
+// initialises map and markers
+  Future<void> _initMapAndMarkers() async {
+    Position position = await _determinePosition(ref);
+    _updatePositionMarker(position, initial: true);
+    await _moveToPosition(position);
+    await _getMarkers();
+  }
+
+  // Assign list of markers to _markers variable
+  Future<void> _getMarkers() async {
+    final locationsController = ref.read(locationsControllerProvider.notifier);
+    List<Marker> markers = await locationsController.buildMarkers(context);
+    setState(() {
+      _markers = Set.from(markers);
+    });
+  }
+
+  // Update the marker for user's current position
   void _updatePositionMarker(Position position, {bool initial = false}) async {
     setState(() {
       _markers.removeWhere(
@@ -66,52 +83,9 @@ class MapPageState extends ConsumerState<MapPage> {
     });
   }
 
-  //
-  Future<void> _initMapAndMarkers() async {
-    Position position = await _determinePosition();
-    _updatePositionMarker(position, initial: true);
-    await _moveToPosition(position);
-    await _getMarkers();
-  }
-
-  //
-  Future<void> _getMarkers() async {
-    final locationsController = ref.read(locationsControllerProvider.notifier);
-    List<Marker> markers = await locationsController.buildMarkers(context);
-    setState(() {
-      _markers = Set.from(markers);
-    });
-  }
-
-  // Get users current location after checking for permissions
-  Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    // Permission handling
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    // Permissions are granted and we can continue accessing the position of the device.
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation);
-    return position;
+  // get user current location
+  Future<Position> _determinePosition(WidgetRef ref) async {
+    return ref.read(locationsControllerProvider.notifier).determinePosition();
   }
 
   // Move to a specified location
@@ -139,7 +113,7 @@ class MapPageState extends ConsumerState<MapPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          Position position = await _determinePosition();
+          Position position = await _determinePosition(ref);
           await _moveToPosition(position);
         },
         child: const Icon(Icons.my_location),

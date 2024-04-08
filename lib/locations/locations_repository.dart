@@ -48,6 +48,18 @@ class LocationsRepository {
         (event) => LocationModel.fromMap(event.data() as Map<String, dynamic>));
   }
 
+  // Edit location details
+  FutureVoid editLocation(LocationModel location) async {
+    try {
+      //
+      return right(_locations.doc(location.id).update(location.toMap()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
   CollectionReference get _locations =>
       _firestore.collection(FirebaseConstants.locationsCollection);
 }
