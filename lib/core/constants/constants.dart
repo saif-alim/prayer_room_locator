@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 class Constants {
   // Image paths
-  static const logoPath = 'assets/images/circleLogo.png';
+  static const logoPath = 'assets/images/hijraLogo.png';
   static const googlePath = 'assets/images/google.png';
-  static const loginEmotePath = 'assets/images/mosque.png';
   static const locationIconPath = 'assets/images/locationIcon.png';
 
   static const femaleIconPath = 'assets/anemities/female.png';
