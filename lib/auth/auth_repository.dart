@@ -55,8 +55,6 @@ class AuthRepository {
         userModel = UserModel(
           name: userCredential.user!.displayName ?? 'No Name',
           email: userCredential.user!.email ?? 'No Email',
-          profilePic: userCredential.user!.photoURL ?? Constants.avatarDefault,
-          banner: Constants.bannerDefault,
           uid: userCredential.user!.uid,
           isAuthenticated: true,
         );

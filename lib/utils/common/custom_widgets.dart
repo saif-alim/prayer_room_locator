@@ -139,9 +139,7 @@ class CustomButton extends StatelessWidget {
   }
 }
 
-// Enum to define the amenity types
-enum AmenityType { wudhu, female, parking }
-
+// Tiles for Amenities Gridview
 class AmenitiesTile extends StatelessWidget {
   const AmenitiesTile({
     Key? key,
@@ -153,18 +151,29 @@ class AmenitiesTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String imagePath;
+    String title;
 
     if (amenityType == 'wudhu') {
       //
       imagePath = Constants.wudhuIconPath;
+      title = 'wudhu area';
     } else if (amenityType == 'female') {
       //
       imagePath = Constants.femaleIconPath;
+      title = 'women\'s area';
     } else if (amenityType == 'parking') {
       //
       imagePath = Constants.parkingIconPath;
+      title = 'parking';
+    } else if (amenityType == 'mosque') {
+      imagePath = Constants.mosqueIconPath;
+      title = 'mosque';
+    } else if (amenityType == 'mfc') {
+      imagePath = Constants.mfcIconPath;
+      title = 'multi-faith centre';
     } else {
       imagePath = '';
+      title = '';
     }
 
     return Center(
@@ -176,7 +185,7 @@ class AmenitiesTile extends StatelessWidget {
               imagePath,
               height: 40,
             ),
-            Text(amenityType),
+            Text(title),
           ],
         ),
       ),

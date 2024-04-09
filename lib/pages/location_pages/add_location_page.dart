@@ -18,6 +18,12 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
   final locationYController = TextEditingController();
   final detailsController = TextEditingController();
 
+  bool _female = false;
+  bool _wudhu = false;
+  bool _parking = false;
+  bool _mosque = false;
+  bool _mfc = false;
+
   @override
   void dispose() {
     super.dispose();
@@ -28,15 +34,24 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
   }
 
   void addLocation() {
-    ref.read(locationsControllerProvider.notifier).addLocation(
-        //Coordinates
-        double.parse(locationXController.text.trim()),
-        double.parse(locationYController.text.trim()),
+    // Initialise list of amenities
+    List<String> amenities = [];
+    // Add the amenities that were ticked into the list
+    if (_mosque) amenities.add("mosque");
+    if (_mfc) amenities.add("mfc");
+    if (_female) amenities.add("female");
+    if (_wudhu) amenities.add("wudhu");
+    if (_parking) amenities.add("parking");
 
-        //Trim extra characters
-        locationNameController.text.trim(),
-        detailsController.text.trim(),
-        context);
+    ref.read(locationsControllerProvider.notifier).addLocation(
+          latitude: double.parse(
+              locationXController.text.trim()), // Trim extra characters
+          longitude: double.parse(locationYController.text.trim()),
+          name: locationNameController.text.trim(),
+          details: detailsController.text.trim(),
+          amenities: amenities, // Assign the amenities list to the location
+          context: context,
+        );
   }
 
   // clear text fields
@@ -62,14 +77,15 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 80,
-                    ),
                     const Text('Want to add your prayer space?',
                         style: Constants.heading1),
                     const SizedBox(height: 5),
                     const Text(
-                        'Submit the details here and we\'ll be in touch to verify'),
+                      'Submit the location\'s details here and we\'ll be in touch to verify',
+                      style: TextStyle(fontWeight: FontWeight.w300),
+                    ),
+                    const SizedBox(height: 5),
+                    const Text('Name:', style: Constants.heading4),
 
                     //
                     CustomTextField(
@@ -78,7 +94,10 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
                     ),
                     const SizedBox(height: 10),
                     //
-                    const Text('Coordinates:'),
+                    const Text(
+                      'Coordinates:',
+                      style: Constants.heading4,
+                    ),
                     CustomTextField(
                       controller: locationXController,
                       hintText: 'Latitude',
@@ -90,17 +109,71 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
                       numbersOnly: true,
                     ),
                     //
+                    const Text(
+                      'Details:',
+                      style: Constants.heading4,
+                    ),
                     CustomTextField(
                       controller: detailsController,
                       hintText: 'Extra Details',
-                      maxLines: 5,
+                      maxLines: 3,
                     ),
-                    CustomButton(
-                        onTap: () {
-                          addLocation();
-                          clearFields();
-                        },
-                        text: 'submit'),
+                    const Text(
+                      'Amenities:',
+                      style: Constants.heading4,
+                    ),
+                    const Text(
+                        "Tick the amenities that are available at the location.",
+                        style: TextStyle(fontWeight: FontWeight.w300)),
+                    CheckboxListTile(
+                      value: _mosque,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _mosque = value!;
+                        });
+                      },
+                      title: const Text("Mosque"),
+                    ),
+                    CheckboxListTile(
+                      value: _mfc,
+                      onChanged: (bool? value) {
+                        _mfc = value!;
+                      },
+                      title: const Text("Multi-Faith Centre"),
+                    ),
+                    CheckboxListTile(
+                      value: _female,
+                      onChanged: (bool? value) {
+                        _female = value!;
+                      },
+                      title: const Text("Women's Area"),
+                    ),
+                    CheckboxListTile(
+                      value: _wudhu,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _wudhu = value!;
+                        });
+                      },
+                      title: const Text("Wudhu Area"),
+                    ),
+                    CheckboxListTile(
+                      value: _parking,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _parking = value!;
+                        });
+                      },
+                      title: const Text("Parking"),
+                    ),
+                    Center(
+                      child: CustomButton(
+                          onTap: () {
+                            addLocation();
+                            clearFields();
+                          },
+                          text: 'submit'),
+                    ),
                   ],
                 ),
               ),

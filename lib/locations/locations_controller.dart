@@ -39,8 +39,14 @@ class LocationsController extends StateNotifier<bool> {
         _ref = ref,
         super(false);
 
-  void addLocation(double latitude, double longitude, String name,
-      String details, BuildContext context) async {
+  void addLocation({
+    required double latitude,
+    required double longitude,
+    required String name,
+    required String details,
+    required List<String> amenities,
+    required BuildContext context,
+  }) async {
     state = true;
     final uid = _ref.read(userProvider)?.uid ?? '';
     final modSet = Set<String>.from(Constants.initialModSet);
@@ -54,7 +60,7 @@ class LocationsController extends StateNotifier<bool> {
       photos: [],
       moderators: modSet,
       isVerified: false,
-      amenities: [],
+      amenities: amenities,
     );
 
     final result = await _locationsRepository.addLocation(locationModel);
