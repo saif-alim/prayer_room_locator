@@ -51,7 +51,7 @@ class MapPageState extends ConsumerState<MapPage> {
 
 // initialises map and markers
   Future<void> _initMapAndMarkers() async {
-    Position position = await _determinePosition(ref);
+    Position position = await _getUserLocation(ref);
     _updatePositionMarker(position, initial: true);
     await _moveToPosition(position);
     await _getMarkers();
@@ -84,8 +84,8 @@ class MapPageState extends ConsumerState<MapPage> {
   }
 
   // get user current location
-  Future<Position> _determinePosition(WidgetRef ref) async {
-    return ref.read(locationsControllerProvider.notifier).determinePosition();
+  Future<Position> _getUserLocation(WidgetRef ref) async {
+    return ref.read(locationsControllerProvider.notifier).getUserLocation();
   }
 
   // Move to a specified location
@@ -113,7 +113,7 @@ class MapPageState extends ConsumerState<MapPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          Position position = await _determinePosition(ref);
+          Position position = await _getUserLocation(ref);
           await _moveToPosition(position);
         },
         child: const Icon(Icons.my_location),

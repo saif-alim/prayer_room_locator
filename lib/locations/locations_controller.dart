@@ -129,7 +129,7 @@ class LocationsController extends StateNotifier<bool> {
   }
 
   // get users current location after checking for permissions
-  Future<Position> determinePosition() async {
+  Future<Position> getUserLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
 

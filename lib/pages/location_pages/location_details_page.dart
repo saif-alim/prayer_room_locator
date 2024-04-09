@@ -1,6 +1,7 @@
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
 import 'package:prayer_room_locator/utils/common/error_text.dart';
 import 'package:prayer_room_locator/utils/common/loader.dart';
@@ -33,6 +34,11 @@ class LocationDetailsPage extends ConsumerWidget {
     }
   }
 
+  // get user current location
+  Future<Position> _getUserLocation(WidgetRef ref) async {
+    return ref.read(locationsControllerProvider.notifier).getUserLocation();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
@@ -63,11 +69,30 @@ class LocationDetailsPage extends ConsumerWidget {
                     style: Constants.heading1,
                   ),
                   const SizedBox(height: 5),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('latitude: ${location.latitude}'),
-                      Text('longitude: ${location.longitude}'),
+                      FutureBuilder<Position>(
+                        future: _getUserLocation(ref),
+                        builder: (context, snapshot) {
+                          // Calculate the distance in kilometers and format it
+                          final distanceInMeters = Geolocator.distanceBetween(
+                            snapshot.data!.latitude,
+                            snapshot.data!.longitude,
+                            location.latitude,
+                            location.longitude,
+                          );
+                          final distanceInKilometers =
+                              (distanceInMeters / 1000).toStringAsFixed(2);
+
+                          return Text(
+                            '$distanceInKilometers km',
+                          );
+                        },
+                      ),
+                      Text(
+                          '${location.latitude.toStringAsFixed(3)}, ${location.longitude.toStringAsFixed(3)}'),
                     ],
                   ),
                   const SizedBox(height: 20),

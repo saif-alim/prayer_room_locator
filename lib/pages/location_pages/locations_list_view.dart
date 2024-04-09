@@ -18,8 +18,8 @@ class LocationsListView extends ConsumerWidget {
   }
 
   // get user current location
-  Future<Position> _determinePosition(WidgetRef ref) async {
-    return ref.read(locationsControllerProvider.notifier).determinePosition();
+  Future<Position> _getUserLocation(WidgetRef ref) async {
+    return ref.read(locationsControllerProvider.notifier).getUserLocation();
   }
 
   @override
@@ -40,7 +40,7 @@ class LocationsListView extends ConsumerWidget {
 
             // Build the list of location tiles
             FutureBuilder<Position>(
-              future: _determinePosition(ref),
+              future: _getUserLocation(ref),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Loader(); // Show loading widget
@@ -74,10 +74,43 @@ class LocationsListView extends ConsumerWidget {
                               itemCount: locations.length,
                               itemBuilder: (BuildContext context, int index) {
                                 final location = locations[index];
+                                final distance = (Geolocator.distanceBetween(
+                                          userLocation.latitude,
+                                          userLocation.longitude,
+                                          location.latitude,
+                                          location.longitude,
+                                        ) /
+                                        1000)
+                                    .toStringAsFixed(
+                                        2); // format to km and 2 decimal places
                                 return ListTile(
                                   title: Text(location.name),
-                                  subtitle: Text(
-                                      'x: ${location.latitude} y: ${location.longitude}'),
+                                  subtitle: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('$distance km'),
+                                      // const Row(
+                                      //   children: [
+                                      //     Icon(Icons.star,
+                                      //         color:
+                                      //             Colors.black), // Black star
+                                      //     Icon(Icons.star,
+                                      //         color:
+                                      //             Colors.black), // Black star
+                                      //     Icon(Icons.star,
+                                      //         color:
+                                      //             Colors.black), // Black star
+                                      //     Icon(Icons.star_half,
+                                      //         color:
+                                      //             Colors.black), // Black star
+                                      //     Icon(Icons.star_border,
+                                      //         color: Colors
+                                      //             .black), // White star outlined in black
+                                      //   ],
+                                      // ),
+                                    ],
+                                  ),
                                   onTap: () {
                                     navigateToLocationPage(context, location);
                                   },
