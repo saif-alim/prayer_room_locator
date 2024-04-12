@@ -57,7 +57,7 @@ class LocationsController extends StateNotifier<bool> {
     final modSet = Set<String>.from(Constants.initialModSet);
     modSet.add(uid);
     LocationModel locationModel = LocationModel(
-      id: name.replaceAll(" ", ""),
+      id: name.replaceAll(" ", ""), // eliminate spaces for id checks
       latitude: latitude,
       longitude: longitude,
       name: name,

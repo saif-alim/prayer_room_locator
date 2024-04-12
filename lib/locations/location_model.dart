@@ -79,7 +79,7 @@ class LocationModel {
 
   @override
   String toString() {
-    return 'LocationModel(id: $id, latitude: $latitude, longitude: $longitude, name: $name)';
+    return 'LocationModel(name: $name, latitude: $latitude, longitude: $longitude)';
   }
 
   @override

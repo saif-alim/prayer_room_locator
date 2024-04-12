@@ -165,7 +165,7 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
                     onTap: () {
                       // logic to save changes
                       saveNewDetails(location, locationDetailsController);
-                      Routemaster.of(context).push('/location/${location.id}');
+                      Routemaster.of(context).pop();
                     },
                     text: 'Save Changes',
                   ),

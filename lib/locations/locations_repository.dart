@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
@@ -38,7 +37,6 @@ class LocationsRepository {
         locations
             .add(LocationModel.fromMap(doc.data() as Map<String, dynamic>));
       }
-      debugPrint('LOCATIONS LENGTH FROM REPO: ${locations.length}');
       return locations;
     });
   }

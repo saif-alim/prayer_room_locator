@@ -14,8 +14,8 @@ class AddLocationPage extends ConsumerStatefulWidget {
 
 class _AddLocationPageState extends ConsumerState<AddLocationPage> {
   final locationNameController = TextEditingController();
-  final locationXController = TextEditingController();
-  final locationYController = TextEditingController();
+  final latitudeController = TextEditingController();
+  final longitudeController = TextEditingController();
   final detailsController = TextEditingController();
 
   bool _female = false;
@@ -28,8 +28,8 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
   void dispose() {
     super.dispose();
     locationNameController.dispose();
-    locationXController.dispose();
-    locationYController.dispose();
+    latitudeController.dispose();
+    longitudeController.dispose();
     detailsController.dispose();
   }
 
@@ -45,8 +45,8 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
 
     ref.read(locationsControllerProvider.notifier).addLocation(
           latitude: double.parse(
-              locationXController.text.trim()), // Trim extra characters
-          longitude: double.parse(locationYController.text.trim()),
+              latitudeController.text.trim()), // Trim extra characters
+          longitude: double.parse(longitudeController.text.trim()),
           name: locationNameController.text.trim(),
           details: detailsController.text.trim(),
           amenities: amenities, // Assign the amenities list to the location
@@ -57,8 +57,8 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
   // clear text fields
   void clearFields() {
     locationNameController.clear();
-    locationXController.clear();
-    locationYController.clear();
+    latitudeController.clear();
+    longitudeController.clear();
     detailsController.clear();
   }
 
@@ -99,13 +99,13 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
                       style: Constants.heading4,
                     ),
                     CustomTextField(
-                      controller: locationXController,
+                      controller: latitudeController,
                       hintText: 'Latitude',
                       numbersOnly: true,
                     ),
                     const SizedBox(height: 5),
                     CustomTextField(
-                      controller: locationYController,
+                      controller: longitudeController,
                       hintText: 'Longitude',
                       numbersOnly: true,
                     ),
