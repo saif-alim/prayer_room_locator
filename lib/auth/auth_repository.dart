@@ -7,7 +7,7 @@ import 'package:prayer_room_locator/utils/common/constants.dart';
 import 'package:prayer_room_locator/utils/failure.dart';
 import 'package:prayer_room_locator/utils/providers/firebase_providers.dart';
 import 'package:prayer_room_locator/utils/type_defs.dart';
-import 'package:prayer_room_locator/models/user_model.dart';
+import 'package:prayer_room_locator/auth/user_model.dart';
 
 final authRepositoryProvider = Provider(
   (ref) => AuthRepository(
@@ -81,9 +81,13 @@ class AuthRepository {
   }
 
   Stream<UserModel?> getUserByEmail(String email) {
-    return _users.doc(email).snapshots().map((event) {
-      if (event.exists && event.data() != null) {
-        return UserModel.fromMap(event.data() as Map<String, dynamic>);
+    return _users
+        .where('email', isEqualTo: email.toLowerCase())
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        return UserModel.fromMap(
+            snapshot.docs.first.data() as Map<String, dynamic>);
       }
       return null;
     });

@@ -76,6 +76,11 @@ class LocationDetailsPage extends ConsumerWidget {
                       FutureBuilder<Position>(
                         future: _getUserLocation(ref),
                         builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (!snapshot.hasData) {
+                            return const Text('');
+                          }
                           // Calculate the distance in kilometers and format it
                           final distanceInMeters = Geolocator.distanceBetween(
                             snapshot.data!.latitude,
@@ -102,7 +107,10 @@ class LocationDetailsPage extends ConsumerWidget {
                     },
                     icon: Transform.rotate(
                         angle: 45 * math.pi / 180, // Convert 45 to radians
-                        child: const Icon(Icons.navigation)),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.0),
+                          child: Icon(Icons.navigation_outlined),
+                        )),
                     label: const Text('Navigate'),
                   ),
                   const SizedBox(height: 20),

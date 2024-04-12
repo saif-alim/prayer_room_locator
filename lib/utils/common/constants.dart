@@ -22,6 +22,7 @@ class Constants {
   static const heading2 = TextStyle(fontSize: 25, fontWeight: FontWeight.bold);
   static const heading3 = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
   static const heading4 = TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
+  static const subtitle = TextStyle(fontWeight: FontWeight.w300);
 }
 
 class FirebaseConstants {

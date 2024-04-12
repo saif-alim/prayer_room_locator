@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
 import 'package:prayer_room_locator/auth/auth_controller.dart';
-import 'package:prayer_room_locator/models/location_model.dart';
+import 'package:prayer_room_locator/locations/location_model.dart';
 import 'package:prayer_room_locator/locations/locations_repository.dart';
 import 'package:prayer_room_locator/utils/common/utils.dart';
 import 'package:routemaster/routemaster.dart';
@@ -26,6 +26,11 @@ final locationsControllerProvider =
 
 final getLocationByIdProvider = StreamProvider.family((ref, String id) {
   return ref.watch(locationsControllerProvider.notifier).getLocationById(id);
+});
+
+final userLocationStreamProvider = StreamProvider<Position>((ref) {
+  final locationsController = ref.watch(locationsControllerProvider.notifier);
+  return locationsController.getPositionStream();
 });
 
 // LocationsController class
@@ -105,15 +110,15 @@ class LocationsController extends StateNotifier<bool> {
 
   // edit location details
   void editLocation({
-    required String? locationDetails,
+    required String? newLocationDetails,
     required String? newModId,
     required List<String>? newAmenities,
     required LocationModel location,
     required BuildContext context,
   }) async {
     // assign new details to location if new details are provided
-    if (locationDetails != null) {
-      location = location.copyWith(details: locationDetails);
+    if (newLocationDetails != null) {
+      location = location.copyWith(details: newLocationDetails);
     }
     if (newModId != null) {
       debugPrint('entered new mod id section');
@@ -121,11 +126,23 @@ class LocationsController extends StateNotifier<bool> {
       newModSet.add(newModId);
       location = location.copyWith(moderators: newModSet);
     }
-    if (newAmenities != null) {}
+    if (newAmenities != null) {
+      location = location.copyWith(amenities: newAmenities);
+    }
     final result = await _locationsRepository.editLocation(location);
 
     result.fold((l) => showSnackBar(context, l.message),
         (r) => showSnackBar(context, 'Success!'));
+  }
+
+  // Provide a stream of position updates
+  Stream<Position> getPositionStream() {
+    const locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.bestForNavigation,
+      distanceFilter: 10, // update every 10 metres
+    );
+
+    return Geolocator.getPositionStream(locationSettings: locationSettings);
   }
 
   // get users current location after checking for permissions

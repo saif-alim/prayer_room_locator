@@ -82,7 +82,7 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
                     const SizedBox(height: 5),
                     const Text(
                       'Submit the location\'s details here and we\'ll be in touch to verify',
-                      style: TextStyle(fontWeight: FontWeight.w300),
+                      style: Constants.subtitle,
                     ),
                     const SizedBox(height: 5),
                     const Text('Name:', style: Constants.heading4),
@@ -103,6 +103,7 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
                       hintText: 'Latitude',
                       numbersOnly: true,
                     ),
+                    const SizedBox(height: 5),
                     CustomTextField(
                       controller: locationYController,
                       hintText: 'Longitude',
@@ -124,7 +125,7 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
                     ),
                     const Text(
                         "Tick the amenities that are available at the location.",
-                        style: TextStyle(fontWeight: FontWeight.w300)),
+                        style: Constants.subtitle),
                     CheckboxListTile(
                       value: _mosque,
                       onChanged: (bool? value) {

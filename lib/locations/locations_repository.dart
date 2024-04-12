@@ -6,7 +6,7 @@ import 'package:prayer_room_locator/utils/common/constants.dart';
 import 'package:prayer_room_locator/utils/failure.dart';
 import 'package:prayer_room_locator/utils/providers/firebase_providers.dart';
 import 'package:prayer_room_locator/utils/type_defs.dart';
-import 'package:prayer_room_locator/models/location_model.dart';
+import 'package:prayer_room_locator/locations/location_model.dart';
 
 final locationsRepositoryProvider = Provider((ref) {
   return LocationsRepository(firestore: ref.watch(firestoreProvider));

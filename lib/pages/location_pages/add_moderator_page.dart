@@ -9,8 +9,8 @@ import 'package:prayer_room_locator/utils/common/utils.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
 import 'package:prayer_room_locator/auth/auth_controller.dart';
 import 'package:prayer_room_locator/locations/locations_controller.dart';
-import 'package:prayer_room_locator/models/location_model.dart';
-import 'package:prayer_room_locator/models/user_model.dart';
+import 'package:prayer_room_locator/locations/location_model.dart';
+import 'package:prayer_room_locator/auth/user_model.dart';
 
 class AddModPage extends ConsumerStatefulWidget {
   final String locationId;
@@ -42,17 +42,20 @@ class _AddModPageState extends ConsumerState<AddModPage> {
     TextEditingController emailController,
     WidgetRef ref,
   ) async {
+    final email = emailController.text.trim().toLowerCase();
+
     // Get user model based on email entered
     final UserModel? user =
-        await ref.read(getUserByEmailProvider(emailController.text).future);
+        await ref.read(getUserByEmailProvider(email).future);
     // check if user was retreived correctly
+
     if (user != null) {
       String newModId = user.uid;
 
       // update moderator
       ref.read(locationsControllerProvider.notifier).editLocation(
             newModId: newModId,
-            locationDetails: null,
+            newLocationDetails: null,
             newAmenities: null,
             location: location,
             context: context,

@@ -32,8 +32,22 @@ class CustomDrawer extends StatelessWidget {
       child: Column(children: [
         const DrawerHeader(
           child: Center(
-            child: Text(' ${Constants.hijra} \n Hijra',
-                style: TextStyle(fontSize: 20)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  ' ${Constants.hijra} ',
+                  style: TextStyle(
+                    fontSize: 28,
+                  ),
+                ),
+                Text('Hijra',
+                    style: TextStyle(
+                      fontSize: 22,
+                    )),
+              ],
+            ),
           ),
         ),
         ListTile(
@@ -73,12 +87,12 @@ class CustomTextField extends StatelessWidget {
   final int maxLines;
 
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.hintText,
     this.numbersOnly = false,
     this.maxLines = 1,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -119,10 +133,10 @@ class CustomTextField extends StatelessWidget {
 // Custom Button
 class CustomButton extends StatelessWidget {
   const CustomButton({
-    Key? key,
+    super.key,
     required this.onTap,
     required this.text,
-  }) : super(key: key);
+  });
   final String text;
   final VoidCallback onTap;
 
@@ -142,9 +156,9 @@ class CustomButton extends StatelessWidget {
 // Tiles for Amenities Gridview
 class AmenitiesTile extends StatelessWidget {
   const AmenitiesTile({
-    Key? key,
+    super.key,
     required this.amenityType,
-  }) : super(key: key);
+  });
 
   final String amenityType;
 
@@ -180,12 +194,13 @@ class AmenitiesTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
               imagePath,
               height: 40,
             ),
-            Text(title),
+            Align(alignment: Alignment.center, child: Text(title)),
           ],
         ),
       ),

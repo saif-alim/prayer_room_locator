@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:prayer_room_locator/utils/common/error_text.dart';
 import 'package:prayer_room_locator/utils/common/loader.dart';
 import 'package:prayer_room_locator/auth/auth_controller.dart';
-import 'package:prayer_room_locator/models/user_model.dart';
+import 'package:prayer_room_locator/auth/user_model.dart';
 import 'package:prayer_room_locator/utils/router.dart';
 import 'package:routemaster/routemaster.dart';
 import 'firebase_options.dart';

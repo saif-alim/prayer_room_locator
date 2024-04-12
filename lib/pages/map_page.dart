@@ -6,9 +6,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
 import 'package:prayer_room_locator/locations/locations_controller.dart';
+import 'package:prayer_room_locator/utils/common/loader.dart';
 
 class MapPage extends ConsumerStatefulWidget {
-  const MapPage({Key? key}) : super(key: key);
+  const MapPage({super.key});
 
   @override
   MapPageState createState() => MapPageState();
@@ -17,42 +18,23 @@ class MapPage extends ConsumerStatefulWidget {
 class MapPageState extends ConsumerState<MapPage> {
   final Completer<GoogleMapController> mapController = Completer();
   Set<Marker> _markers = {};
-  StreamSubscription<Position>? positionStream;
 
   @override
   void initState() {
     super.initState();
     _initMapAndMarkers();
-    _initPositionStream();
   }
 
   @override
   void dispose() {
     super.dispose();
-    positionStream?.cancel();
   }
 
   // Functions and Methods
 
-  // initialises position stream
-  void _initPositionStream() {
-    const locationSettings = LocationSettings(
-      accuracy: LocationAccuracy.bestForNavigation,
-    );
-
-    positionStream =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((position) {
-      _updatePositionMarker(position);
-      debugPrint('init position streamed');
-      // _moveToPosition(position);
-    });
-  }
-
 // initialises map and markers
   Future<void> _initMapAndMarkers() async {
     Position position = await _getUserLocation(ref);
-    _updatePositionMarker(position, initial: true);
     await _moveToPosition(position);
     await _getMarkers();
   }
@@ -63,23 +45,6 @@ class MapPageState extends ConsumerState<MapPage> {
     List<Marker> markers = await locationsController.buildMarkers(context);
     setState(() {
       _markers = Set.from(markers);
-    });
-  }
-
-  // Update the marker for user's current position
-  void _updatePositionMarker(Position position, {bool initial = false}) async {
-    setState(() {
-      _markers.removeWhere(
-          (marker) => marker.markerId == const MarkerId('userPosition'));
-      _markers.add(
-        Marker(
-          markerId: const MarkerId('userPosition'),
-          position: LatLng(position.latitude, position.longitude),
-          infoWindow: const InfoWindow(title: 'Your Location'),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-              BitmapDescriptor.hueBlue), // Use the custom icon if available
-        ),
-      );
     });
   }
 
@@ -100,16 +65,46 @@ class MapPageState extends ConsumerState<MapPage> {
     return Scaffold(
       appBar: const CustomAppBar(),
       drawer: const CustomDrawer(),
-      body: GoogleMap(
-        zoomControlsEnabled: false,
-        compassEnabled: true,
-        myLocationButtonEnabled: true,
-        initialCameraPosition: const CameraPosition(
-          target: LatLng(51.5080, -0.1281),
-          zoom: 10,
-        ),
-        onMapCreated: (controller) => mapController.complete(controller),
-        markers: _markers,
+      body: Consumer(
+        builder: (context, ref, child) {
+          // Listen to userLocationStreamProvider for location updates
+          final positionAsyncValue = ref.watch(userLocationStreamProvider);
+
+          // update user's location marker
+          return positionAsyncValue.when(
+            data: (position) {
+              // update _markers
+              final userLocationMarker = Marker(
+                markerId: const MarkerId('userPosition'),
+                position: LatLng(position.latitude, position.longitude),
+                infoWindow: const InfoWindow(title: 'Your Location'),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueBlue),
+              );
+
+              // Set with updated markers
+              final updatedMarkers = {..._markers, userLocationMarker};
+
+              return GoogleMap(
+                zoomControlsEnabled: false,
+                compassEnabled: true,
+                myLocationButtonEnabled: true,
+                initialCameraPosition: const CameraPosition(
+                  target: LatLng(51.5080, -0.1281),
+                  zoom: 10,
+                ),
+                onMapCreated: (controller) {
+                  if (!mapController.isCompleted) {
+                    mapController.complete(controller);
+                  }
+                },
+                markers: updatedMarkers,
+              );
+            },
+            error: (error, stackTrace) => Text(error.toString()),
+            loading: () => const Loader(),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
