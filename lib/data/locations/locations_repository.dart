@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
-import 'package:prayer_room_locator/utils/failure.dart';
-import 'package:prayer_room_locator/utils/providers/firebase_providers.dart';
-import 'package:prayer_room_locator/utils/type_defs.dart';
-import 'package:prayer_room_locator/locations/location_model.dart';
+import 'package:prayer_room_locator/utils/error-handling/failure.dart';
+import 'package:prayer_room_locator/data/firebase_providers.dart';
+import 'package:prayer_room_locator/utils/error-handling/type_defs.dart';
+import 'package:prayer_room_locator/data/locations/location_model.dart';
 
 final locationsRepositoryProvider = Provider((ref) {
   return LocationsRepository(firestore: ref.watch(firestoreProvider));
@@ -17,6 +17,10 @@ class LocationsRepository {
   LocationsRepository({required FirebaseFirestore firestore})
       : _firestore = firestore;
 
+  CollectionReference get _locations =>
+      _firestore.collection(FirebaseConstants.locationsCollection);
+
+  // Add a new location
   FutureVoid addLocation(LocationModel locationModel) async {
     try {
       return right(_locations.doc(locationModel.id).set(locationModel.toMap()));
@@ -57,7 +61,4 @@ class LocationsRepository {
       return left(Failure(e.toString()));
     }
   }
-
-  CollectionReference get _locations =>
-      _firestore.collection(FirebaseConstants.locationsCollection);
 }

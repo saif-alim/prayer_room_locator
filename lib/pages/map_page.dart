@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
-import 'package:prayer_room_locator/locations/locations_controller.dart';
+import 'package:prayer_room_locator/data/locations/locations_controller.dart';
 import 'package:prayer_room_locator/utils/common/loader.dart';
 
 class MapPage extends ConsumerStatefulWidget {
@@ -28,6 +28,9 @@ class MapPageState extends ConsumerState<MapPage> {
   @override
   void dispose() {
     super.dispose();
+    mapController.future.then((controller) {
+      controller.dispose();
+    });
   }
 
   // Functions and Methods

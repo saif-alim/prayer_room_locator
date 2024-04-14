@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
-import 'package:prayer_room_locator/utils/common/error_text.dart';
+import 'package:prayer_room_locator/utils/error-handling/error_text.dart';
 import 'package:prayer_room_locator/utils/common/loader.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
-import 'package:prayer_room_locator/locations/location_model.dart';
-import 'package:prayer_room_locator/locations/locations_controller.dart';
+import 'package:prayer_room_locator/data/locations/location_model.dart';
+import 'package:prayer_room_locator/data/locations/locations_controller.dart';
 import 'package:routemaster/routemaster.dart';
 
 class LocationsListView extends ConsumerWidget {

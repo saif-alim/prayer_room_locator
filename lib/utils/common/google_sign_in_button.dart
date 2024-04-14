@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
-import 'package:prayer_room_locator/auth/auth_controller.dart';
+import 'package:prayer_room_locator/data/auth/auth_controller.dart';
 
 class GoogleSignInButton extends ConsumerWidget {
   const GoogleSignInButton({super.key});

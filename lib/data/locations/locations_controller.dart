@@ -1,17 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
-import 'package:prayer_room_locator/auth/auth_controller.dart';
-import 'package:prayer_room_locator/locations/location_model.dart';
-import 'package:prayer_room_locator/locations/locations_repository.dart';
+import 'package:prayer_room_locator/data/auth/auth_controller.dart';
+import 'package:prayer_room_locator/data/locations/location_model.dart';
+import 'package:prayer_room_locator/data/locations/locations_repository.dart';
 import 'package:prayer_room_locator/utils/common/utils.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // Providers
-//
+
 final locationsProvider = StreamProvider((ref) {
   final locationsController = ref.watch(locationsControllerProvider.notifier);
   return locationsController.getLocations();
@@ -143,6 +146,21 @@ class LocationsController extends StateNotifier<bool> {
     );
 
     return Geolocator.getPositionStream(locationSettings: locationSettings);
+  }
+
+  void launchMaps(LocationModel location) async {
+    Uri url;
+    if (Platform.isIOS) {
+      url = Uri.parse(
+          "https://maps.apple.com/?daddr=${location.latitude},${location.longitude}");
+    } else {
+      url = Uri.parse(
+          'https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}');
+    }
+
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
 
   // get users current location after checking for permissions

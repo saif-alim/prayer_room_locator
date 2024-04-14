@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
 import 'package:prayer_room_locator/utils/common/loader.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
-import 'package:prayer_room_locator/locations/locations_controller.dart';
+import 'package:prayer_room_locator/data/locations/locations_controller.dart';
 
 class AddLocationPage extends ConsumerStatefulWidget {
   const AddLocationPage({super.key});

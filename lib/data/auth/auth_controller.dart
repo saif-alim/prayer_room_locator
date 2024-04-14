@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:prayer_room_locator/auth/auth_repository.dart';
-import 'package:prayer_room_locator/auth/user_model.dart';
+import 'package:prayer_room_locator/data/auth/auth_repository.dart';
+import 'package:prayer_room_locator/data/auth/user_model.dart';
 import 'package:prayer_room_locator/utils/common/utils.dart';
 
 final userProvider = StateProvider<UserModel?>((ref) => null);
@@ -19,12 +19,14 @@ final authStateChangeProvider = StreamProvider.autoDispose<User?>((ref) {
   return authController.authStateChange;
 });
 
-final getUserDataProvider = StreamProvider.family((ref, String uid) {
+final getUserDataProvider =
+    StreamProvider.family.autoDispose((ref, String uid) {
   final authController = ref.watch(authControllerProvider.notifier);
   return authController.getUserData(uid);
 });
 
-final getUserByEmailProvider = StreamProvider.family((ref, String email) {
+final getUserByEmailProvider =
+    StreamProvider.family.autoDispose((ref, String email) {
   return ref.watch(authControllerProvider.notifier).getUserByEmail(email);
 });
 

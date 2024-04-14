@@ -29,4 +29,5 @@ class FirebaseConstants {
   static const usersCollection = 'users';
   static const locationsCollection = 'locations';
   static const commentsCollection = 'comments';
+  static const ratingsCollection = 'ratings';
 }

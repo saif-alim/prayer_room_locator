@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
-import 'package:prayer_room_locator/utils/failure.dart';
-import 'package:prayer_room_locator/utils/providers/firebase_providers.dart';
-import 'package:prayer_room_locator/utils/type_defs.dart';
-import 'package:prayer_room_locator/auth/user_model.dart';
+import 'package:prayer_room_locator/utils/error-handling/failure.dart';
+import 'package:prayer_room_locator/data/firebase_providers.dart';
+import 'package:prayer_room_locator/utils/error-handling/type_defs.dart';
+import 'package:prayer_room_locator/data/auth/user_model.dart';
 
 final authRepositoryProvider = Provider(
   (ref) => AuthRepository(
