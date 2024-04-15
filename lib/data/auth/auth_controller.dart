@@ -62,6 +62,44 @@ class AuthController extends StateNotifier<bool> {
             .update((state) => userModel)); // Update user state on success.
   }
 
+  void signUpWithEmail({
+    required String email,
+    required String password,
+    required String name,
+    required BuildContext context,
+  }) async {
+    state = true;
+    final user = await _authRepository.signUpWithEmail(
+      email: email,
+      password: password,
+      name: name,
+      context: context,
+    );
+    state = false;
+    user.fold(
+        (l) => showSnackBar(context, l.message),
+        (userModel) =>
+            _ref.read(userProvider.notifier).update((state) => userModel));
+  }
+
+  void loginWithEmail({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    state = true;
+    final user = await _authRepository.loginWithEmail(
+      email: email,
+      password: password,
+      context: context,
+    );
+    state = false;
+    user.fold(
+        (l) => showSnackBar(context, l.message),
+        (userModel) =>
+            _ref.read(userProvider.notifier).update((state) => userModel));
+  }
+
   // Method to handle user log out.
   void logOut() async {
     _authRepository.logOut();

@@ -81,10 +81,11 @@ class CustomDrawer extends StatelessWidget {
 }
 
 // Custom Text Field Widget
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final bool numbersOnly;
+  final bool isPass;
   final int maxLines;
 
   const CustomTextField({
@@ -92,41 +93,68 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     required this.hintText,
     this.numbersOnly = false,
+    this.isPass = false,
     this.maxLines = 1,
   });
 
   @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  late bool _obscureText;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscureText = widget.isPass;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: controller,
-      maxLines: maxLines,
-      keyboardType: numbersOnly
+      obscureText: _obscureText,
+      controller: widget.controller,
+      maxLines: widget.maxLines,
+      keyboardType: widget.numbersOnly
           ? const TextInputType.numberWithOptions(decimal: true, signed: true)
           : null, // Conditionally set the keyboard type for numeric input
-      inputFormatters: numbersOnly
+      inputFormatters: widget.numbersOnly
           ? <TextInputFormatter>[
               FilteringTextInputFormatter.allow(RegExp(r'^-?(\d+)?\.?\d{0,10}'))
             ]
           : null, // Allow numeric input with optional negative and decimal values
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.transparent, width: 0),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.transparent, width: 0),
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        filled: true,
-        fillColor: const Color(0xffF5F6FA),
-        hintText: hintText,
-        hintStyle: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.transparent, width: 0),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.transparent, width: 0),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          filled: true,
+          fillColor: const Color(0xffF5F6FA),
+          hintText: widget.hintText,
+          hintStyle: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+          suffixIcon: widget.isPass
+              ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                  icon: Icon(
+                    // Toggle icon based on visibility
+                    _obscureText ? Icons.visibility_off : Icons.visibility,
+                  ),
+                )
+              : null),
     );
   }
 }

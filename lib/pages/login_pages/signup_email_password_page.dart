@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:prayer_room_locator/data/auth/auth_controller.dart';
 import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
+import 'package:routemaster/routemaster.dart';
 
 // Class for email password sign up
-class EmailPasswordSignupPage extends StatefulWidget {
+class EmailPasswordSignupPage extends ConsumerStatefulWidget {
   const EmailPasswordSignupPage({super.key});
 
   @override
-  State<EmailPasswordSignupPage> createState() =>
+  ConsumerState<EmailPasswordSignupPage> createState() =>
       _EmailPasswordLoginPageState();
 }
 
-class _EmailPasswordLoginPageState extends State<EmailPasswordSignupPage> {
+class _EmailPasswordLoginPageState
+    extends ConsumerState<EmailPasswordSignupPage> {
   // Controllers for text fields
   final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -27,7 +31,19 @@ class _EmailPasswordLoginPageState extends State<EmailPasswordSignupPage> {
   }
 
   // Method to handle user sign-up logic
-  void signUpUser() async {}
+  void signUpUser() {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    final name = nameController.text.trim();
+
+    ref.read(authControllerProvider.notifier).signUpWithEmail(
+          email: email,
+          password: password,
+          name: name,
+          context: context,
+        );
+    Routemaster.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +80,7 @@ class _EmailPasswordLoginPageState extends State<EmailPasswordSignupPage> {
             child: CustomTextField(
               controller: passwordController,
               hintText: 'Password',
+              isPass: true,
             ), // Password text field
           ),
           const SizedBox(height: 40),

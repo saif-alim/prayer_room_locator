@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -72,6 +74,59 @@ class AuthRepository {
       throw e.message!;
     } catch (e) {
       return left(Failure(e.toString()));
+    }
+  }
+
+  // Handles sign up of the user and user creation
+  FutureEither<UserModel> signUpWithEmail({
+    required String email,
+    required String password,
+    required String name,
+    required BuildContext context,
+  }) async {
+    try {
+      if (email.isEmpty || password.isEmpty || name.isEmpty) {
+        throw 'Fields must not be empty';
+      }
+      // register user
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      UserModel userModel;
+
+      if (userCredential.additionalUserInfo!.isNewUser) {
+        userModel = UserModel(
+          name: name,
+          email: email,
+          uid: userCredential.user!.uid,
+          isAuthenticated: true,
+        );
+        await _users.doc(userModel.uid).set(userModel.toMap());
+      } else {
+        userModel = await getUserData(userCredential.user!.uid).first;
+      }
+      return right(userModel);
+    } on FirebaseAuthException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  FutureEither<UserModel> loginWithEmail({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    try {
+      final userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      UserModel userModel = await getUserData(userCredential.user!.uid).first;
+      return right(userModel);
+    } on FirebaseAuthException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return Left(Failure(e.toString()));
     }
   }
 
