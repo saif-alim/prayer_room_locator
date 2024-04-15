@@ -14,12 +14,14 @@ class EmailPasswordSignupPage extends StatefulWidget {
 class _EmailPasswordLoginPageState extends State<EmailPasswordSignupPage> {
   // Controllers for text fields
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   @override
   void dispose() {
     // Dispose controllers to prevent memory leaks
     emailController.dispose();
+    nameController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -39,13 +41,21 @@ class _EmailPasswordLoginPageState extends State<EmailPasswordSignupPage> {
             style: Constants.heading1,
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.08,
+            height: MediaQuery.of(context).size.height * 0.05,
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
             child: CustomTextField(
+              controller: nameController,
+              hintText: 'Name',
+            ), // Email text field
+          ),
+          const SizedBox(height: 20),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            child: CustomTextField(
               controller: emailController,
-              hintText: 'Enter your email',
+              hintText: 'Email',
             ), // Email text field
           ),
           const SizedBox(height: 20),
@@ -53,7 +63,7 @@ class _EmailPasswordLoginPageState extends State<EmailPasswordSignupPage> {
             margin: const EdgeInsets.symmetric(horizontal: 20),
             child: CustomTextField(
               controller: passwordController,
-              hintText: 'Enter your password',
+              hintText: 'Password',
             ), // Password text field
           ),
           const SizedBox(height: 40),

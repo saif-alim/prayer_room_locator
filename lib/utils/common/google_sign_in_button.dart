@@ -17,13 +17,19 @@ class GoogleSignInButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // ElevatedButton with an google icon
     return ElevatedButton.icon(
+      style: const ButtonStyle(
+        backgroundColor: MaterialStatePropertyAll(Colors.white),
+        foregroundColor: MaterialStatePropertyAll(Colors.black),
+      ),
       onPressed: () => signInWithGoogle(context, ref),
       icon: Image.asset(
         Constants.googlePath, // Set the Google icon
         width: 35,
       ),
-      label: const Text('Continue with Google',
-          style: TextStyle(fontSize: 18)), // Text label
+      label: const Text(
+        'Continue with Google',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+      ), // Text label
     );
   }
 }

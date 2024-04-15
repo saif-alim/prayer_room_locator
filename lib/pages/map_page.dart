@@ -125,8 +125,6 @@ class MapPageState extends ConsumerState<MapPage> {
             elevation: 15,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            backgroundColor: Colors.white,
-            foregroundColor: const Color.fromARGB(255, 58, 121, 154),
             child: const Icon(
               Icons.my_location,
               size: 30,

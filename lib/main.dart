@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:prayer_room_locator/utils/common/app_theme.dart';
 import 'package:prayer_room_locator/utils/error-handling/error_text.dart';
 import 'package:prayer_room_locator/utils/common/loader.dart';
 import 'package:prayer_room_locator/data/auth/auth_controller.dart';
@@ -50,7 +51,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return ref.watch(authStateChangeProvider).when(
           data: (data) => MaterialApp.router(
             debugShowCheckedModeBanner: false,
-            theme: ThemeData.light(), // Sets light theme
+            theme: AppTheme.lightTheme, // Sets light theme
             routerDelegate: RoutemasterDelegate(routesBuilder: (context) {
               if (data != null) {
                 getData(ref, data); // Gets user data.

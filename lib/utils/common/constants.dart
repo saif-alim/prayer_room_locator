@@ -20,11 +20,14 @@ class Constants {
   static const Set<String> initialModSet = {globalMod};
 
   // Text Styles used throughout the app
-  static const heading1 = TextStyle(fontSize: 40, fontWeight: FontWeight.bold);
+  static const heading1 = TextStyle(fontSize: 40, fontWeight: FontWeight.w600);
   static const heading2 = TextStyle(fontSize: 25, fontWeight: FontWeight.bold);
   static const heading3 = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
   static const heading4 = TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
   static const subtitle = TextStyle(fontWeight: FontWeight.w300);
+  static const appTitle = TextStyle(fontSize: 25, fontWeight: FontWeight.w500);
+  static const buttonLabel =
+      TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
 }
 
 // Class to hold constants related to Firebase collections

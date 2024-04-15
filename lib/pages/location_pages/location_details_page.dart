@@ -16,7 +16,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 // Class to display a specific location's details
 class LocationDetailsPage extends ConsumerWidget {
-  final String id; // ID of the location to display
+  final String id; // ID of the location to edit
   const LocationDetailsPage({
     super.key,
     required this.id,
@@ -42,21 +42,22 @@ class LocationDetailsPage extends ConsumerWidget {
       drawer: const CustomDrawer(),
       body: ref.watch(getLocationByIdProvider(id)).when(
             data: (location) => Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ListView(
                 children: [
                   // Conditionally displays the 'Edit Details' button if current user is a moderator for the location
                   location.moderators.contains(user.uid)
-                      ? Padding(
-                          padding: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.45),
-                          child: CustomButton(
-                            text: 'Edit Details',
-                            onTap: () {
+                      ? Align(
+                          alignment: Alignment.centerRight,
+                          child: ElevatedButton.icon(
+                            // text: 'Edit Details',
+                            onPressed: () {
                               // Navigates to location moderator page
                               Routemaster.of(context)
                                   .push('/mod/${location.id}');
                             },
+                            label: const Text('Edit'),
+                            icon: const Icon(Icons.edit),
                           ),
                         )
                       : Container(),
@@ -104,6 +105,7 @@ class LocationDetailsPage extends ConsumerWidget {
                                   children: [
                                     Text(numRatings
                                         .toString()), // Displays number of ratings
+                                    const SizedBox(width: 3),
                                     GestureDetector(
                                       onTap: () {
                                         // Opens the rating dialog when tapped

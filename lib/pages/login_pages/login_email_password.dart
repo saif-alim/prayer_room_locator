@@ -36,11 +36,11 @@ class _EmailPasswordLoginPageState extends State<EmailPasswordLoginPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(
-            'Sign In', // Heading
+            'Login', // Heading
             style: Constants.heading1,
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.08,
+            height: MediaQuery.of(context).size.height * 0.05,
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),

@@ -14,8 +14,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text(
-        Constants.hijra,
-        style: TextStyle(fontSize: 30),
+        'Hijra',
+        style: Constants.appTitle,
       ),
       centerTitle: true,
     );
@@ -30,22 +30,22 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Column(children: [
-        const DrawerHeader(
+        DrawerHeader(
           child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  ' ${Constants.hijra} ', // Use of Arabic name in a styled text
-                  style: TextStyle(
-                    fontSize: 28,
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Image.asset(
+                    Constants.logoPath,
+                    height: 50,
                   ),
                 ),
-                Text('Hijra', // English transliteration for clarity
-                    style: TextStyle(
-                      fontSize: 22,
-                    )),
+                const Text(
+                  'Hijra  ', // Use of Arabic name in a styled text
+                  style: Constants.appTitle,
+                ),
               ],
             ),
           ),
@@ -145,15 +145,15 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          minimumSize: const Size(250, 40),
-          maximumSize: const Size(250, 40),
-          backgroundColor: Colors.white),
+        minimumSize: const Size(250, 40),
+        maximumSize: const Size(250, 40),
+      ),
       onPressed: onTap,
       child: Text(
         text,
         style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(221, 22, 43, 27)),
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
