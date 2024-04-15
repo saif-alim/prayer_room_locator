@@ -12,7 +12,7 @@ class AppTheme {
             ),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           elevation: 15,
-          backgroundColor: Color.fromARGB(255, 68, 130, 163),
+          backgroundColor: Color.fromARGB(255, 85, 160, 200),
           foregroundColor: Colors.white,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -27,6 +27,10 @@ class AppTheme {
             // For text color and button shadows, etc.
           ),
         ),
+        textButtonTheme: const TextButtonThemeData(
+            style: ButtonStyle(
+                foregroundColor:
+                    MaterialStatePropertyAll(Color.fromARGB(255, 11, 80, 67)))),
         iconButtonTheme: const IconButtonThemeData(
             style: ButtonStyle(elevation: MaterialStatePropertyAll(10))));
   }

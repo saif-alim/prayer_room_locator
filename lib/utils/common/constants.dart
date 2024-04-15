@@ -28,6 +28,7 @@ class Constants {
   static const appTitle = TextStyle(fontSize: 25, fontWeight: FontWeight.w500);
   static const buttonLabel =
       TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
+  static const heavy = TextStyle(fontWeight: FontWeight.w600);
 }
 
 // Class to hold constants related to Firebase collections

@@ -4,6 +4,7 @@ import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
 import 'package:prayer_room_locator/utils/common/loader.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
 import 'package:prayer_room_locator/data/locations/locations_controller.dart';
+import 'package:prayer_room_locator/utils/coordinates_help_dialog.dart';
 
 // Class to add a new location
 class AddLocationPage extends ConsumerStatefulWidget {
@@ -103,15 +104,28 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
                     const Text('Name:',
                         style: Constants.heading4), // Location name field
                     CustomTextField(
-                        controller: locationNameController, hintText: 'Name'),
+                        controller: locationNameController,
+                        hintText: 'Location Name'),
                     const SizedBox(height: 10),
-                    const Text('Coordinates:',
-                        style: Constants.heading4), // Coordinates fields
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Coordinates:', style: Constants.heading4),
+                        IconButton(
+                            onPressed: () {
+                              CoordinatesHelpDialog(context: context).show();
+                            },
+                            icon: const Icon(
+                              Icons.help_outline,
+                              color: Color.fromARGB(255, 5, 132, 195),
+                            ))
+                      ],
+                    ), // Coordinates fields
                     CustomTextField(
                         controller: latitudeController,
                         hintText: 'Latitude',
                         numbersOnly: true),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 10),
                     CustomTextField(
                         controller: longitudeController,
                         hintText: 'Longitude',
