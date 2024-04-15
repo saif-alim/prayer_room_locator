@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+// Data Class for Location
 class LocationModel {
   final String id;
 

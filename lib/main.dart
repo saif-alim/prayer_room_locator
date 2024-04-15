@@ -13,10 +13,12 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions
+        .currentPlatform, // Initialize Firebase with default settings
   );
 
   runApp(const ProviderScope(
+    // Wraps the app with ProviderScope to enable Riverpod
     child: MyApp(),
   ));
 }
@@ -31,13 +33,15 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> {
   UserModel? userModel;
 
+  // Retrieves user data and updates state
   void getData(WidgetRef ref, User data) async {
     userModel = await ref
         .watch(authControllerProvider.notifier)
         .getUserData(data.uid)
-        .first;
+        .first; // Fetch UserModel for current user
 
-    ref.read(userProvider.notifier).update((state) => userModel);
+    ref.read(userProvider.notifier).update((state) =>
+        userModel); // Update the userProvider with the fetched user model
     setState(() {});
   }
 
@@ -46,20 +50,23 @@ class _MyAppState extends ConsumerState<MyApp> {
     return ref.watch(authStateChangeProvider).when(
           data: (data) => MaterialApp.router(
             debugShowCheckedModeBanner: false,
-            theme: ThemeData.light(),
+            theme: ThemeData.light(), // Sets light theme
             routerDelegate: RoutemasterDelegate(routesBuilder: (context) {
               if (data != null) {
-                getData(ref, data);
+                getData(ref, data); // Gets user data.
                 if (userModel != null) {
-                  return loggedInRoute;
+                  return loggedInRoute; // If userModel is not null, returns the logged in route map
                 }
               }
-              return loggedOutRoute;
+              return loggedOutRoute; // If data is null, returns the logged-out route map
             }),
             routeInformationParser: const RoutemasterParser(),
           ),
-          error: (error, stackTrace) => ErrorText(error: error.toString()),
-          loading: () => const Loader(),
+          error: (error, stackTrace) => ErrorText(
+              error: error
+                  .toString()), // Displays error if there's a problem with auth state
+          loading: () =>
+              const Loader(), // Shows a loading indicator while the auth state is being resolved
         );
   }
 }

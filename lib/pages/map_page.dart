@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
@@ -22,27 +21,27 @@ class MapPageState extends ConsumerState<MapPage> {
   @override
   void initState() {
     super.initState();
-    _initMapAndMarkers();
+    _initMapAndMarkers(); // Initialize the map and markers once the widget is created
   }
 
   @override
   void dispose() {
     super.dispose();
+    // Dispose controller to free resources
     mapController.future.then((controller) {
       controller.dispose();
     });
   }
 
-  // Functions and Methods
-
-// initialises map and markers
+  // Initializes the user's position on the map and sets up markers
   Future<void> _initMapAndMarkers() async {
-    Position position = await _getUserLocation(ref);
-    await _moveToPosition(position);
-    await _getMarkers();
+    Position position =
+        await _getUserLocation(ref); // Get current user location
+    await _moveToPosition(position); // Move the map to user location
+    await _getMarkers(); // Fetch and set markers
   }
 
-  // Assign list of markers to _markers variable
+  // Get and build markers
   Future<void> _getMarkers() async {
     final locationsController = ref.read(locationsControllerProvider.notifier);
     List<Marker> markers = await locationsController.buildMarkers(context);
@@ -51,16 +50,17 @@ class MapPageState extends ConsumerState<MapPage> {
     });
   }
 
-  // get user current location
+  // Get current user location
   Future<Position> _getUserLocation(WidgetRef ref) async {
     return ref.read(locationsControllerProvider.notifier).getUserLocation();
   }
 
-  // Move to a specified location
+  // Animates the camera to the specified position
   Future<void> _moveToPosition(Position position) async {
     final GoogleMapController controller = await mapController.future;
     controller.animateCamera(CameraUpdate.newLatLngZoom(
-        LatLng(position.latitude, position.longitude), 14));
+        LatLng(position.latitude, position.longitude),
+        14)); // Sets a zoom level of 14
   }
 
   @override
@@ -70,30 +70,31 @@ class MapPageState extends ConsumerState<MapPage> {
       drawer: const CustomDrawer(),
       body: Consumer(
         builder: (context, ref, child) {
-          // Listen to userLocationStreamProvider for location updates
+          // Listen for changes in the user's location
           final positionAsyncValue = ref.watch(userLocationStreamProvider);
 
-          // update user's location marker
           return positionAsyncValue.when(
             data: (position) {
-              // update _markers
               final userLocationMarker = Marker(
                 markerId: const MarkerId('userPosition'),
                 position: LatLng(position.latitude, position.longitude),
                 infoWindow: const InfoWindow(title: 'Your Location'),
                 icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue),
+                    BitmapDescriptor.hueBlue), // Blue marker for user location
               );
 
-              // Set with updated markers
-              final updatedMarkers = {..._markers, userLocationMarker};
+              final updatedMarkers = {
+                ..._markers,
+                userLocationMarker
+              }; // Update the markers set with the user's location
 
               return GoogleMap(
                 zoomControlsEnabled: false,
                 compassEnabled: true,
-                myLocationButtonEnabled: true,
+                myLocationButtonEnabled: false,
                 initialCameraPosition: const CameraPosition(
-                  target: LatLng(51.5080, -0.1281),
+                  target: LatLng(51.5080,
+                      -0.1281), // Initial focus before user location is fetched
                   zoom: 10,
                 ),
                 onMapCreated: (controller) {
@@ -105,16 +106,33 @@ class MapPageState extends ConsumerState<MapPage> {
               );
             },
             error: (error, stackTrace) => Text(error.toString()),
-            loading: () => const Loader(),
+            loading: () =>
+                const Loader(), // Loading indicator while getting data
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          Position position = await _getUserLocation(ref);
-          await _moveToPosition(position);
-        },
-        child: const Icon(Icons.my_location),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Transform.scale(
+          scale: 1.2,
+          child: FloatingActionButton(
+            onPressed: () async {
+              Position position =
+                  await _getUserLocation(ref); // Get current location
+              await _moveToPosition(
+                  position); // Re-center the map to user location
+            },
+            elevation: 15,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            backgroundColor: Colors.white,
+            foregroundColor: const Color.fromARGB(255, 58, 121, 154),
+            child: const Icon(
+              Icons.my_location,
+              size: 30,
+            ),
+          ),
+        ),
       ),
     );
   }

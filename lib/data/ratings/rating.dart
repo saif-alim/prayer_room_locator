@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+// Data class for location ratings
 class Rating {
   final String id;
   final double ratingValue;

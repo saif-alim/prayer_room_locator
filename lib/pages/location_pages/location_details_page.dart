@@ -14,35 +14,38 @@ import 'package:routemaster/routemaster.dart';
 import 'dart:math' as math;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+// Class to display a specific location's details
 class LocationDetailsPage extends ConsumerWidget {
-  final String id;
+  final String id; // ID of the location to display
   const LocationDetailsPage({
     super.key,
     required this.id,
   });
 
-  // Launches the user's default navigation appliciation directing them to the relevant location.
+  // Function launch native map application to the specified location
   void launchMaps(LocationModel location, WidgetRef ref) async {
-    ref.watch(locationsControllerProvider.notifier).launchMaps(location);
+    ref.read(locationsControllerProvider.notifier).launchMaps(location);
   }
 
-  // get user current location
+  // Function to get user current location
   Future<Position> _getUserLocation(WidgetRef ref) async {
     return ref.read(locationsControllerProvider.notifier).getUserLocation();
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Gets the current user's information from the user provider
     final user = ref.watch(userProvider)!;
-    final ratingsStream = ref.watch(ratingsByLocationProvider(id));
-    return ref.watch(getLocationByIdProvider(id)).when(
-          data: (location) => Scaffold(
-            appBar: const CustomAppBar(),
-            drawer: const CustomDrawer(),
-            body: Padding(
+
+    return Scaffold(
+      appBar: const CustomAppBar(),
+      drawer: const CustomDrawer(),
+      body: ref.watch(getLocationByIdProvider(id)).when(
+            data: (location) => Padding(
               padding: const EdgeInsets.all(16.0),
               child: ListView(
                 children: [
+                  // Conditionally displays the 'Edit Details' button if current user is a moderator for the location
                   location.moderators.contains(user.uid)
                       ? Padding(
                           padding: EdgeInsets.only(
@@ -50,22 +53,19 @@ class LocationDetailsPage extends ConsumerWidget {
                           child: CustomButton(
                             text: 'Edit Details',
                             onTap: () {
-                              // logic to navigate to edit page
+                              // Navigates to location moderator page
                               Routemaster.of(context)
                                   .push('/mod/${location.id}');
                             },
                           ),
                         )
                       : Container(),
-                  Text(
-                    location.name,
-                    style: Constants.heading1,
-                  ),
+                  Text(location.name, style: Constants.heading1),
                   const SizedBox(height: 5),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // FutureBuilder to get and display the user's distance from the location
                       FutureBuilder<Position>(
                         future: _getUserLocation(ref),
                         builder: (context, snapshot) {
@@ -74,7 +74,6 @@ class LocationDetailsPage extends ConsumerWidget {
                           } else if (!snapshot.hasData) {
                             return const Text('');
                           }
-                          // Calculate the distance in kilometers and format it
                           final distanceInMeters = Geolocator.distanceBetween(
                             snapshot.data!.latitude,
                             snapshot.data!.longitude,
@@ -84,83 +83,70 @@ class LocationDetailsPage extends ConsumerWidget {
                           final distanceInKilometers =
                               (distanceInMeters / 1000).toStringAsFixed(2);
 
-                          return Text(
-                            '$distanceInKilometers km',
-                          );
+                          return Text('$distanceInKilometers km');
                         },
                       ),
-                      // Rating section
-                      ratingsStream.when(
-                        data: (ratings) {
-                          final filteredRatings =
-                              ratings // Filter ratings to include only those with a value of at least 1
-                                  .where((rating) => rating.ratingValue >= 1)
-                                  .toList();
-
-                          // Calculate the average of filtered ratings if not empty, else it's 0.0
-                          final double averageRating =
-                              filteredRatings.isNotEmpty
-                                  ? filteredRatings
+                      // Displays average rating
+                      ref.watch(ratingsByLocationProvider(id)).when(
+                            data: (ratings) {
+                              final averageRating = ratings.isNotEmpty
+                                  ? ratings
                                           .map((rating) => rating.ratingValue)
                                           .reduce((a, b) => a + b) /
-                                      filteredRatings.length
+                                      ratings.length
                                   : 0.0;
+                              final int numRatings = ratings.length;
 
-                          final int numRatings = filteredRatings.length;
-
-                          return Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  numRatings.toString(),
-                                ),
-                                GestureDetector(
-                                  onTap: () => RatingDialog(
-                                          locationId: location.id,
-                                          uid: user.uid,
-                                          context: context,
-                                          ref: ref)
-                                      .show(),
-                                  child: RatingBar.builder(
-                                    initialRating: averageRating,
-                                    minRating: 1,
-                                    maxRating: 5,
-                                    direction: Axis.horizontal,
-                                    allowHalfRating: true,
-                                    itemCount: 5,
-                                    itemSize: 20.0, // Size of each star
-                                    itemBuilder: (context, _) => const Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
+                              return Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(numRatings
+                                        .toString()), // Displays number of ratings
+                                    GestureDetector(
+                                      onTap: () {
+                                        // Opens the rating dialog when tapped
+                                        RatingDialog(
+                                                locationId: location.id,
+                                                uid: user.uid,
+                                                context: context,
+                                                ref: ref)
+                                            .show();
+                                      },
+                                      child: RatingBar.builder(
+                                        initialRating: averageRating,
+                                        minRating: 1,
+                                        maxRating: 5,
+                                        direction: Axis.horizontal,
+                                        allowHalfRating: true,
+                                        itemCount: 5,
+                                        itemSize: 20.0,
+                                        itemBuilder: (context, _) => const Icon(
+                                            Icons.star,
+                                            color: Colors.amber),
+                                        onRatingUpdate: (rating) {},
+                                        ignoreGestures: true,
+                                      ), // Displays rating bar with average rating
                                     ),
-                                    onRatingUpdate: (rating) {
-                                      // Add logic to change rating
-                                    },
-                                    ignoreGestures: true, // TEMP
-                                  ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          );
-                        },
-                        error: (e, stack) => Text("Error: $e"),
-                        loading: () => const Loader(),
-                      ),
+                              );
+                            },
+                            error: (e, stack) => Text("Error: $e"),
+                            loading: () => const Loader(),
+                          ),
                     ],
                   ),
                   const SizedBox(height: 5),
                   Text(
                       'Latitude: ${location.latitude.toStringAsFixed(3)}, Longitude: ${location.longitude.toStringAsFixed(3)}'),
                   const SizedBox(height: 10),
-                  // Navigate Button
+                  // Launch navigation to the location button
                   ElevatedButton.icon(
-                    onPressed: () {
-                      launchMaps(location, ref);
-                    },
+                    onPressed: () => launchMaps(location, ref),
                     icon: Transform.rotate(
-                        angle: 45 * math.pi / 180, // Convert 45 to radians
+                        angle: 45 * math.pi / 180,
                         child: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.0),
                           child: Icon(Icons.navigation_outlined),
@@ -171,8 +157,8 @@ class LocationDetailsPage extends ConsumerWidget {
                   const Text('Details', style: Constants.heading2),
                   Text(location.details),
                   const SizedBox(height: 20),
-                  // Grid
                   const Text('Amenities', style: Constants.heading2),
+                  // Displays a grid of available amenities
                   SizedBox(
                     height: 500,
                     child: GridView.builder(
@@ -181,18 +167,16 @@ class LocationDetailsPage extends ConsumerWidget {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3),
-                      itemBuilder: (context, index) {
-                        return AmenitiesTile(
-                            amenityType: location.amenities[index]);
-                      },
+                      itemBuilder: (context, index) =>
+                          AmenitiesTile(amenityType: location.amenities[index]),
                     ),
                   ),
                 ],
               ),
             ),
+            error: (error, stackTrace) => ErrorText(error: error.toString()),
+            loading: () => const Loader(),
           ),
-          error: (error, stackTrace) => ErrorText(error: error.toString()),
-          loading: () => const Loader(),
-        );
+    );
   }
 }

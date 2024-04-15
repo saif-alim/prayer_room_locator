@@ -7,6 +7,7 @@ import 'package:prayer_room_locator/data/ratings/rating.dart';
 import 'package:prayer_room_locator/data/ratings/ratings_controller.dart';
 import 'package:routemaster/routemaster.dart';
 
+// Pop up rating dialog to submit user rating
 class RatingDialog {
   final BuildContext context;
   final String locationId;
@@ -20,16 +21,20 @@ class RatingDialog {
     required this.ref,
   });
 
+  // Function to handle rating submission
   Future<void> onRatingSubmit(double userRating, WidgetRef ref) async {
     final ratingsController = ref.read(ratingsControllerProvider.notifier);
+    // Get existing ratings for the location
     final existingRatings =
         await ref.read(ratingsByLocationProvider(locationId).future);
 
+    // Find an existing rating by this user or create a default one if none exists
     final existingRating = existingRatings.firstWhere(
       (rating) => rating.uid == uid,
       orElse: () => Rating(id: '', ratingValue: 0.0, uid: '', locationId: ''),
     );
 
+    // Add new rating or update existing rating
     if (existingRating.ratingValue > 0) {
       ratingsController.editRating(
         newRatingvalue: userRating,
@@ -45,20 +50,23 @@ class RatingDialog {
     }
   }
 
+  // Function to display the dialog
   void show() {
-    double userRating = 5;
+    double userRating = 5; // Initially display 5 stars
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Rate this Location'),
+          title: const Text(
+            'Rate this Location',
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text('Tap a star to set your rating.'),
               const SizedBox(height: 20),
               RatingBar.builder(
-                initialRating: 5,
+                initialRating: 5, // Start with a full rating
                 minRating: 1,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
@@ -69,7 +77,7 @@ class RatingDialog {
                   color: Colors.amber,
                 ),
                 onRatingUpdate: (rating) {
-                  userRating = rating; // Update userRating
+                  userRating = rating; // Update userRating on each change
                 },
               ),
             ],
@@ -77,13 +85,14 @@ class RatingDialog {
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
-              onPressed: () => Routemaster.of(context).pop(),
+              onPressed: () =>
+                  Routemaster.of(context).pop(), // Close the dialog on cancel
             ),
             TextButton(
               child: const Text('Submit'),
               onPressed: () {
-                onRatingSubmit(userRating, ref);
-                Routemaster.of(context).pop();
+                onRatingSubmit(userRating, ref); // Submit rating
+                Routemaster.of(context).pop(); // Close the dialog on submit
               },
             ),
           ],

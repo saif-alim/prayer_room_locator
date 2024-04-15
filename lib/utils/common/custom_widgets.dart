@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
 import 'package:routemaster/routemaster.dart';
 
-// Custom App Bar
+// Custom App Bar Widget
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
 
@@ -22,7 +22,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-// Custom Drawer
+// Custom Drawer Widget
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
 
@@ -37,12 +37,12 @@ class CustomDrawer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  ' ${Constants.hijra} ',
+                  ' ${Constants.hijra} ', // Use of Arabic name in a styled text
                   style: TextStyle(
                     fontSize: 28,
                   ),
                 ),
-                Text('Hijra',
+                Text('Hijra', // English transliteration for clarity
                     style: TextStyle(
                       fontSize: 22,
                     )),
@@ -53,24 +53,25 @@ class CustomDrawer extends StatelessWidget {
         ListTile(
           title: const Text(
             'Home',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.black), // Home menu item
           ),
           onTap: () {
-            Routemaster.of(context).push('/');
+            Routemaster.of(context).push('/'); // Navigation to home
+            Routemaster.of(context).pop(); // Close drawer after navigation
+          },
+        ),
+        ListTile(
+          title: const Text('List View'), // List View menu item
+          onTap: () {
+            Routemaster.of(context)
+                .push('/listview'); // Navigation to list view
             Routemaster.of(context).pop();
           },
         ),
         ListTile(
-          title: const Text('List View'),
+          title: const Text('Profile'), // Profile menu item
           onTap: () {
-            Routemaster.of(context).push('/listview');
-            Routemaster.of(context).pop();
-          },
-        ),
-        ListTile(
-          title: const Text('Profile'),
-          onTap: () {
-            Routemaster.of(context).push('/profile');
+            Routemaster.of(context).push('/profile'); // Navigation to profile
             Routemaster.of(context).pop();
           },
         ),
@@ -79,7 +80,7 @@ class CustomDrawer extends StatelessWidget {
   }
 }
 
-// Custom Text Field
+// Custom Text Field Widget
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
@@ -101,12 +102,12 @@ class CustomTextField extends StatelessWidget {
       maxLines: maxLines,
       keyboardType: numbersOnly
           ? const TextInputType.numberWithOptions(decimal: true, signed: true)
-          : null,
+          : null, // Conditionally set the keyboard type for numeric input
       inputFormatters: numbersOnly
           ? <TextInputFormatter>[
               FilteringTextInputFormatter.allow(RegExp(r'^-?(\d+)?\.?\d{0,10}'))
             ]
-          : null,
+          : null, // Allow numeric input with optional negative and decimal values
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -130,7 +131,7 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
-// Custom Button
+// Custom Button Widget
 class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
@@ -144,16 +145,21 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        minimumSize: const Size(250, 40),
-        maximumSize: const Size(250, 40),
-      ),
+          minimumSize: const Size(250, 40),
+          maximumSize: const Size(250, 40),
+          backgroundColor: Colors.white),
       onPressed: onTap,
-      child: Text(text),
+      child: Text(
+        text,
+        style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(221, 22, 43, 27)),
+      ),
     );
   }
 }
 
-// Tiles for Amenities Gridview
+// Tiles for Amenities Gridview Widget
 class AmenitiesTile extends StatelessWidget {
   const AmenitiesTile({
     super.key,
@@ -167,16 +173,14 @@ class AmenitiesTile extends StatelessWidget {
     String imagePath;
     String title;
 
+    // Determines the image and title based on the type of amenity
     if (amenityType == 'wudhu') {
-      //
       imagePath = Constants.wudhuIconPath;
       title = 'wudhu area';
     } else if (amenityType == 'female') {
-      //
       imagePath = Constants.femaleIconPath;
       title = 'women\'s area';
     } else if (amenityType == 'parking') {
-      //
       imagePath = Constants.parkingIconPath;
       title = 'parking';
     } else if (amenityType == 'mosque') {

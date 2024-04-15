@@ -13,14 +13,14 @@ import 'package:prayer_room_locator/pages/profile_page.dart';
 import 'package:prayer_room_locator/pages/settings_page.dart';
 import 'package:routemaster/routemaster.dart';
 
-// loggedOut
+// Route map for when the user is not logged in
 final loggedOutRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child: LoginPage()),
   '/signup': (_) => const MaterialPage(child: EmailPasswordSignupPage()),
   '/login': (_) => const MaterialPage(child: EmailPasswordLoginPage()),
 });
 
-//loggedIn
+// Route map for when the user is logged in
 final loggedInRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child: MapPage()),
   '/profile': (_) => const MaterialPage(child: ProfilePage()),
@@ -28,10 +28,9 @@ final loggedInRoute = RouteMap(routes: {
   '/listview': (_) => const MaterialPage(child: LocationsListView()),
   '/addlocation': (_) => const MaterialPage(child: AddLocationPage()),
   '/location/:id': (route) => MaterialPage(
-        child: LocationDetailsPage(
-          id: route.pathParameters['id']!,
-        ),
-      ),
+          child: LocationDetailsPage(
+        id: route.pathParameters['id']!,
+      )),
   '/mod/:id': (route) => MaterialPage(
           child: LocationModeratorPage(
         id: route.pathParameters['id']!,
@@ -43,5 +42,5 @@ final loggedInRoute = RouteMap(routes: {
   '/add-moderators/:id': (route) => MaterialPage(
           child: AddModPage(
         locationId: route.pathParameters['id']!,
-      ))
+      )),
 });

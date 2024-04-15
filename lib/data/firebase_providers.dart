@@ -4,7 +4,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+// Firebase related providers
+
 final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
-final authProvider = Provider((ref) => FirebaseAuth.instance);
-final storageProvider = Provider((ref) => FirebaseStorage.instance);
-final googleSignInProvider = Provider((ref) => GoogleSignIn());
+final authProvider = Provider.autoDispose((ref) => FirebaseAuth.instance);
+final storageProvider = Provider.autoDispose((ref) => FirebaseStorage.instance);
+final googleSignInProvider = Provider.autoDispose((ref) => GoogleSignIn());

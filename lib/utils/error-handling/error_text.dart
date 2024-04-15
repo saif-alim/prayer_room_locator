@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Returns centred text with the error text
 class ErrorText extends StatelessWidget {
   final String error;
   const ErrorText({super.key, required this.error});

@@ -9,6 +9,7 @@ import 'package:prayer_room_locator/data/firebase_providers.dart';
 import 'package:prayer_room_locator/utils/error-handling/type_defs.dart';
 import 'package:prayer_room_locator/data/auth/user_model.dart';
 
+// Provider for AuthRepository
 final authRepositoryProvider = Provider(
   (ref) => AuthRepository(
     firestore: ref.read(firestoreProvider),
@@ -17,6 +18,7 @@ final authRepositoryProvider = Provider(
   ),
 );
 
+// Repository class that handles authentication and user management
 class AuthRepository {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
@@ -30,11 +32,14 @@ class AuthRepository {
         _firestore = firestore,
         _googleSignIn = googleSignIn;
 
+  // Gets access to the users collection in Firestore
   CollectionReference get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);
 
+  // Stream that notifies auth state changes
   Stream<User?> get authStateChange => _auth.authStateChanges();
 
+  // Handles Google Sign-In and user creation/updating
   FutureEither<UserModel> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
@@ -70,16 +75,19 @@ class AuthRepository {
     }
   }
 
+  // Method to log out the current user
   void logOut() async {
     await _googleSignIn.signOut();
     await _auth.signOut();
   }
 
+  // Retrieve user's data by UID
   Stream<UserModel> getUserData(String uid) {
     return _users.doc(uid).snapshots().map(
         (event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
   }
 
+  // Retrieve user's data by email
   Stream<UserModel?> getUserByEmail(String email) {
     return _users
         .where('email', isEqualTo: email.toLowerCase())
@@ -93,6 +101,7 @@ class AuthRepository {
     });
   }
 
+  // Retrieve authenticated users' data from Firestore
   Stream<List<UserModel>> getUsers() {
     return _users
         .where('isAuthenticated', isEqualTo: true)

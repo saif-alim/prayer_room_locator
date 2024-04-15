@@ -5,31 +5,38 @@ import 'package:prayer_room_locator/data/auth/auth_repository.dart';
 import 'package:prayer_room_locator/data/auth/user_model.dart';
 import 'package:prayer_room_locator/utils/common/utils.dart';
 
+// Provider to manage user information globally.
 final userProvider = StateProvider<UserModel?>((ref) => null);
 
-final authControllerProvider = StateNotifierProvider<AuthController, bool>(
+// Provider to manage authentication state.
+final authControllerProvider =
+    StateNotifierProvider.autoDispose<AuthController, bool>(
   (ref) => AuthController(
     authRepository: ref.watch(authRepositoryProvider),
     ref: ref,
   ),
 );
 
+// Provider to listen to auth state changes.
 final authStateChangeProvider = StreamProvider.autoDispose<User?>((ref) {
   final authController = ref.watch(authControllerProvider.notifier);
   return authController.authStateChange;
 });
 
+// Provider to retrieve user data based on UID.
 final getUserDataProvider =
-    StreamProvider.family.autoDispose((ref, String uid) {
+    StreamProvider.autoDispose.family((ref, String uid) {
   final authController = ref.watch(authControllerProvider.notifier);
   return authController.getUserData(uid);
 });
 
+// Provider to retrieve user data based on email.
 final getUserByEmailProvider =
-    StreamProvider.family.autoDispose((ref, String email) {
+    StreamProvider.autoDispose.family((ref, String email) {
   return ref.watch(authControllerProvider.notifier).getUserByEmail(email);
 });
 
+// AuthController class for managing authentication logic.
 class AuthController extends StateNotifier<bool> {
   final AuthRepository _authRepository;
   final Ref _ref;
@@ -37,32 +44,40 @@ class AuthController extends StateNotifier<bool> {
   AuthController({required AuthRepository authRepository, required Ref ref})
       : _authRepository = authRepository,
         _ref = ref,
-        super(false); // loading
+        super(false); // Initializes with 'false' indicating not loading.
 
+  // Stream to get auth state changes.
   Stream<User?> get authStateChange => _authRepository.authStateChange;
 
+  // Handles Google sign-in.
   void signInWithGoogle(BuildContext context) async {
-    state = true;
+    state = true; // Set loading to true.
     final user = await _authRepository.signInWithGoogle();
-    state = false;
+    state = false; // Set loading to false.
     user.fold(
-        (l) => showSnackBar(context, l.message),
-        (userModel) =>
-            _ref.read(userProvider.notifier).update((state) => userModel));
+        (l) =>
+            showSnackBar(context, l.message), // Show error message on failure.
+        (userModel) => _ref
+            .read(userProvider.notifier)
+            .update((state) => userModel)); // Update user state on success.
   }
 
+  // Method to handle user log out.
   void logOut() async {
     _authRepository.logOut();
   }
 
+  // Get user data by UID.
   Stream<UserModel> getUserData(String uid) {
     return _authRepository.getUserData(uid);
   }
 
+  // Get user data by email.
   Stream<UserModel?> getUserByEmail(String email) {
     return _authRepository.getUserByEmail(email);
   }
 
+  // Get all users data.
   Stream<List<UserModel>> getUsers() {
     return _authRepository.getUsers();
   }

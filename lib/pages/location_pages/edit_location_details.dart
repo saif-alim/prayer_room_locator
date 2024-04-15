@@ -8,8 +8,9 @@ import 'package:prayer_room_locator/data/locations/locations_controller.dart';
 import 'package:prayer_room_locator/data/locations/location_model.dart';
 import 'package:routemaster/routemaster.dart';
 
+// Class to edit the details of a location
 class EditLocationDetails extends ConsumerStatefulWidget {
-  final String id;
+  final String id; // ID of the location to edit
   const EditLocationDetails({
     super.key,
     required this.id,
@@ -21,8 +22,10 @@ class EditLocationDetails extends ConsumerStatefulWidget {
 }
 
 class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
-  final locationDetailsController = TextEditingController();
+  final locationDetailsController =
+      TextEditingController(); // Controller for location details input field
 
+  // Boolean flags for amenities
   bool _female = false;
   bool _wudhu = false;
   bool _parking = false;
@@ -32,33 +35,33 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
   @override
   void dispose() {
     super.dispose();
-    locationDetailsController.dispose();
+    locationDetailsController.dispose(); // Dispose to avoid memory leaks
   }
 
   void clearFields() {
-    locationDetailsController.clear();
+    locationDetailsController.clear(); // Clears input field
   }
 
+  // Function to save updated location details
   void saveNewDetails(
       LocationModel location, TextEditingController detailsController) {
-    // Initialise list of amenities
     List<String>? amenities = [];
-    String? details = detailsController.text.trim();
-    // Add the amenities that were ticked into the list
     if (_mosque) amenities.add("mosque");
     if (_mfc) amenities.add("mfc");
     if (_female) amenities.add("female");
     if (_wudhu) amenities.add("wudhu");
     if (_parking) amenities.add("parking");
 
-    // If the user makes no changes, the previous information will not change
-    if (amenities.isEmpty) {
-      amenities = null;
-    }
+    String? details =
+        detailsController.text.trim(); // Trim the text for consistency
     if (details.isEmpty) {
-      details = null;
+      details = null; // No update if no details are entered
+    }
+    if (amenities.isEmpty) {
+      amenities = null; // No update if no amenities were modified
     }
 
+    // Update location details
     ref.read(locationsControllerProvider.notifier).editLocation(
           newLocationDetails: details,
           location: location,
@@ -66,82 +69,64 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
           newAmenities: amenities,
           context: context,
         );
-    clearFields();
+    clearFields(); // Clear fields after updating
   }
 
   @override
   Widget build(BuildContext context) {
-    return ref.watch(getLocationByIdProvider(widget.id)).when(
-          data: (location) => Scaffold(
-            appBar: const CustomAppBar(),
-            drawer: const CustomDrawer(),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ListView(
+    return Scaffold(
+      appBar: const CustomAppBar(),
+      drawer: const CustomDrawer(),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ref.watch(getLocationByIdProvider(widget.id)).when(
+              data: (location) => ListView(
                 children: [
-                  const Text(
-                    'Edit Details:',
-                    style: Constants.heading1,
-                  ),
-                  Text(
-                    location.name,
-                    style: Constants.heading2,
-                  ),
+                  const Text('Edit Details:',
+                      style: Constants.heading1), // Heading
+                  Text(location.name,
+                      style: Constants.heading2), // Displays location name
                   const SizedBox(height: 20),
-                  // current
-                  const Text(
-                    'Current Location Details:',
-                    style: Constants.heading4,
-                  ),
+                  const Text('Current Location Details:',
+                      style: Constants.heading4), // Current details section
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 8.0, horizontal: 16.0),
-                    child: Text(location.details),
+                    child: Text(location.details), // Displays current details
                   ),
                   const SizedBox(height: 20),
-
-                  // new
-                  const Text(
-                    'Edit Location Details:',
-                    style: Constants.heading4,
-                  ),
+                  const Text('Edit Location Details:',
+                      style: Constants.heading4), // Section for editing details
                   CustomTextField(
                     controller: locationDetailsController,
                     hintText: 'New Location Details',
                     maxLines: 5,
                   ),
                   const SizedBox(height: 20),
-                  // Amenities
-                  const Text(
-                    'Edit Amenities:',
-                    style: Constants.heading4,
-                  ),
-
-                  const Text(
-                      "Tick the amenities that are available at the location.",
-                      style: Constants.subtitle),
+                  const Text('Edit Amenities:',
+                      style: Constants.heading4), // Amenities section
                   CheckboxListTile(
                     value: _mosque,
                     onChanged: (bool? value) {
-                      setState(() {
-                        _mosque = value!;
-                      });
+                      _mosque = value!;
                     },
-                    title: const Text("Mosque"),
+                    title: const Text("Mosque"), // Checkbox for mosque amenity
                   ),
                   CheckboxListTile(
                     value: _mfc,
                     onChanged: (bool? value) {
                       _mfc = value!;
                     },
-                    title: const Text("Multi-Faith Centre"),
+                    title: const Text(
+                        "Multi-Faith Centre"), // Checkbox for MFC amenity.
                   ),
                   CheckboxListTile(
                     value: _female,
                     onChanged: (bool? value) {
                       _female = value!;
                     },
-                    title: const Text("Women's Area"),
+                    title: const Text(
+                        "Women's Area"), // Checkbox for women's area.
                   ),
                   CheckboxListTile(
                     value: _wudhu,
@@ -150,7 +135,7 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
                         _wudhu = value!;
                       });
                     },
-                    title: const Text("Wudhu Area"),
+                    title: const Text("Wudhu Area"), // Checkbox for wudhu area.
                   ),
                   CheckboxListTile(
                     value: _parking,
@@ -159,22 +144,26 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
                         _parking = value!;
                       });
                     },
-                    title: const Text("Parking"),
+                    title: const Text("Parking"), // Checkbox for parking.
                   ),
                   CustomButton(
                     onTap: () {
-                      // logic to save changes
-                      saveNewDetails(location, locationDetailsController);
-                      Routemaster.of(context).pop();
+                      saveNewDetails(
+                          location, locationDetailsController); // Save changes
+                      Routemaster.of(context)
+                          .pop(); // Navigate back after saving
                     },
                     text: 'Save Changes',
                   ),
                 ],
               ),
+
+              error: (error, stackTrace) =>
+                  ErrorText(error: error.toString()), // Displays error
+              loading: () =>
+                  const Loader(), // Show loading indicator while fetching data
             ),
-          ),
-          error: (error, stackTrace) => ErrorText(error: error.toString()),
-          loading: () => const Loader(),
-        );
+      ),
+    );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Centred loader widget to display on loading
 class Loader extends StatelessWidget {
   const Loader({super.key});
 

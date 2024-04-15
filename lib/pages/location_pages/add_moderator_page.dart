@@ -13,7 +13,7 @@ import 'package:prayer_room_locator/data/locations/location_model.dart';
 import 'package:prayer_room_locator/data/auth/user_model.dart';
 
 class AddModPage extends ConsumerStatefulWidget {
-  final String locationId;
+  final String locationId; // ID of the relevant location
   const AddModPage({
     super.key,
     required this.locationId,
@@ -24,17 +24,17 @@ class AddModPage extends ConsumerStatefulWidget {
 }
 
 class _AddModPageState extends ConsumerState<AddModPage> {
-  Set<String> uids = {};
-  late TextEditingController newModController = TextEditingController();
+  late TextEditingController newModController =
+      TextEditingController(); // Controller for moderator's email input
 
   @override
   void dispose() {
     super.dispose();
-    newModController.dispose();
+    newModController.dispose(); // Dispose to avoid memory leaks
   }
 
   void clearFields() {
-    newModController.clear();
+    newModController.clear(); // Clears the text field
   }
 
   void saveNewMod(
@@ -42,17 +42,18 @@ class _AddModPageState extends ConsumerState<AddModPage> {
     TextEditingController emailController,
     WidgetRef ref,
   ) async {
-    final email = emailController.text.trim().toLowerCase();
+    final email = emailController.text
+        .trim()
+        .toLowerCase(); // Trim and lowercase input for consistency
 
-    // Get user model based on email entered
+    // Get user model based on email
     final UserModel? user =
         await ref.read(getUserByEmailProvider(email).future);
-    // check if user was retreived correctly
 
     if (user != null) {
-      String newModId = user.uid;
+      String newModId = user.uid; // Obtain the UID from the UserModel
 
-      // update moderator
+      // Update the location with the new moderator
       ref.read(locationsControllerProvider.notifier).editLocation(
             newModId: newModId,
             newLocationDetails: null,
@@ -61,9 +62,9 @@ class _AddModPageState extends ConsumerState<AddModPage> {
             context: context,
           );
 
-      clearFields();
+      clearFields(); // Clear the fields after successful operation
     } else {
-      debugPrint('user not found');
+      // If user not found, display error message
       showSnackBar(context,
           'User not found. Please check the email address and try again.');
     }
@@ -71,31 +72,35 @@ class _AddModPageState extends ConsumerState<AddModPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ref.watch(getLocationByIdProvider(widget.locationId)).when(
-          data: (location) => Scaffold(
-            appBar: const CustomAppBar(),
-            drawer: const CustomDrawer(),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
+    return Scaffold(
+      appBar: const CustomAppBar(),
+      drawer: const CustomDrawer(),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ref.watch(getLocationByIdProvider(widget.locationId)).when(
+              data: (location) => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Moderators', style: Constants.heading1),
-                  // add moderator
+                  const Text('Moderators',
+                      style: Constants.heading1), // Heading text
+                  // Add moderator section.
                   const Text('Add Moderator', style: Constants.heading3),
                   CustomTextField(
                       controller: newModController, hintText: 'Enter email'),
+                  const SizedBox(height: 10),
                   Center(
                       child: CustomButton(
-                    onTap: () => saveNewMod(location, newModController, ref),
+                    onTap: () => saveNewMod(location, newModController,
+                        ref), // Save the new moderator
                     text: 'Add Moderator',
                   )),
                   const SizedBox(height: 20),
-                  // display current moderators
+                  // Display all current moderators
                   const Text('Current Moderators', style: Constants.heading3),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: location.moderators.length,
+                      itemCount:
+                          location.moderators.length, // Number of moderators
                       itemBuilder: (context, index) {
                         final modList = location.moderators.toList();
                         final modId = modList[index];
@@ -103,22 +108,27 @@ class _AddModPageState extends ConsumerState<AddModPage> {
                         return ref.watch(getUserDataProvider(modId)).when(
                               data: (user) {
                                 return ListTile(
-                                  title: Text(user.email),
+                                  title: Text(
+                                      user.email), // Display moderator's email
                                 );
                               },
-                              error: ((error, stackTrace) =>
-                                  ErrorText(error: error.toString())),
-                              loading: () => const Loader(),
+                              error: ((error, stackTrace) => ErrorText(
+                                  error: error.toString())), // Error handling
+                              loading: () =>
+                                  Container(), // Loading indicator while user data is loading
                             );
                       },
                     ),
                   ),
                 ],
               ),
+              error: (error, stackTrace) => ErrorText(
+                  error:
+                      error.toString()), // Error handling on loading location
+              loading: () =>
+                  const Loader(), // Loading indicator while location data is loading
             ),
-          ),
-          error: (error, stackTrace) => ErrorText(error: error.toString()),
-          loading: () => const Loader(),
-        );
+      ),
+    );
   }
 }
