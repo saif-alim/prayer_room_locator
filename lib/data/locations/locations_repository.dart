@@ -63,9 +63,6 @@ class LocationsRepository {
     try {
       // Attempt to update location data
       return right(_locations.doc(location.id).update(location.toMap()));
-    } on FirebaseException catch (e) {
-      // Handle Firestore specific exceptions
-      throw e.message!;
     } catch (e) {
       // Handle any other exceptions
       return left(Failure(e.toString()));

@@ -34,8 +34,8 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
 
   @override
   void dispose() {
-    super.dispose();
     locationDetailsController.dispose(); // Dispose to avoid memory leaks
+    super.dispose();
   }
 
   void clearFields() {
@@ -43,8 +43,7 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
   }
 
   // Function to save updated location details
-  void saveNewDetails(
-      LocationModel location, TextEditingController detailsController) {
+  void saveNewDetails(LocationModel location) {
     List<String>? amenities = [];
     if (_mosque) amenities.add("mosque");
     if (_mfc) amenities.add("mfc");
@@ -53,7 +52,7 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
     if (_parking) amenities.add("parking");
 
     String? details =
-        detailsController.text.trim(); // Trim the text for consistency
+        locationDetailsController.text.trim(); // Trim the text for consistency
     if (details.isEmpty) {
       details = null; // No update if no details are entered
     }
@@ -148,8 +147,7 @@ class _EditLocationDetailsState extends ConsumerState<EditLocationDetails> {
                   ),
                   CustomButton(
                     onTap: () {
-                      saveNewDetails(
-                          location, locationDetailsController); // Save changes
+                      saveNewDetails(location); // Save changes
                       Routemaster.of(context)
                           .pop(); // Navigate back after saving
                     },

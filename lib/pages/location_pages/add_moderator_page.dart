@@ -29,8 +29,8 @@ class _AddModPageState extends ConsumerState<AddModPage> {
 
   @override
   void dispose() {
-    super.dispose();
     newModController.dispose(); // Dispose to avoid memory leaks
+    super.dispose();
   }
 
   void clearFields() {

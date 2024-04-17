@@ -36,9 +36,9 @@ class _EmailPasswordLoginPageState
   // Dispose of controllers
   @override
   void dispose() {
-    super.dispose();
     emailController.dispose();
     passwordController.dispose();
+    super.dispose();
   }
 
   @override

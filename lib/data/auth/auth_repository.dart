@@ -187,4 +187,12 @@ class AuthRepository {
       return users;
     });
   }
+
+  FutureVoid editUser(UserModel user) async {
+    try {
+      return right(_users.doc(user.uid).update(user.toMap()));
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
 }

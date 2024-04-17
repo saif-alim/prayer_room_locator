@@ -31,11 +31,11 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
   @override
   void dispose() {
     // Dispose controllers when the widget is removed from the widget tree
-    super.dispose();
     locationNameController.dispose();
     latitudeController.dispose();
     longitudeController.dispose();
     detailsController.dispose();
+    super.dispose();
   }
 
   // Function to handle the submission of a new location

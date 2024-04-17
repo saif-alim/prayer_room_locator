@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/data/auth/auth_repository.dart';
 import 'package:prayer_room_locator/data/auth/user_model.dart';
@@ -119,5 +120,18 @@ class AuthController extends StateNotifier<bool> {
   // Get all users data.
   Stream<List<UserModel>> getUsers() {
     return _authRepository.getUsers();
+  }
+
+  // Method to edit user details
+  void editLocation({
+    required String newDisplayName,
+    required UserModel user,
+    required BuildContext context,
+  }) async {
+    user = user.copyWith(name: newDisplayName);
+    final result = await _authRepository.editUser(user);
+
+    result.fold((l) => showSnackBar(context, l.message),
+        (r) => showSnackBar(context, 'Success!'));
   }
 }

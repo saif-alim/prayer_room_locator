@@ -12,7 +12,7 @@ class ProfilePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Get the current user's data
-    final user = ref.watch(userProvider)!;
+    final user = ref.read(userProvider)!;
 
     return Scaffold(
       appBar: const CustomAppBar(),

@@ -10,7 +10,8 @@ import 'package:prayer_room_locator/pages/login_pages/login_email_password.dart'
 import 'package:prayer_room_locator/pages/login_pages/login_page.dart';
 import 'package:prayer_room_locator/pages/login_pages/signup_email_password_page.dart';
 import 'package:prayer_room_locator/pages/profile_page.dart';
-import 'package:prayer_room_locator/pages/settings_page.dart';
+import 'package:prayer_room_locator/pages/settings_pages/edit_profile_page.dart';
+import 'package:prayer_room_locator/pages/settings_pages/settings_page.dart';
 import 'package:routemaster/routemaster.dart';
 
 // Route map for when the user is not logged in
@@ -25,6 +26,7 @@ final loggedInRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child: MapPage()),
   '/profile': (_) => const MaterialPage(child: ProfilePage()),
   '/settings': (_) => const MaterialPage(child: SettingsPage()),
+  '/edit-profile': (route) => MaterialPage(child: EditProfilePage()),
   '/listview': (_) => const MaterialPage(child: LocationsListView()),
   '/addlocation': (_) => const MaterialPage(child: AddLocationPage()),
   '/location/:id': (route) => MaterialPage(

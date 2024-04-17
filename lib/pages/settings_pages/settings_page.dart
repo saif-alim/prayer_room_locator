@@ -32,6 +32,11 @@ class SettingsPage extends ConsumerWidget {
             // Account settings section
             const Text('Account Settings', style: Constants.heading3),
             ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Edit Profile'),
+              onTap: () => Routemaster.of(context).push('/edit-profile'),
+            ),
+            ListTile(
               // Logout list tile
               leading: const Icon(
                 Icons.logout,
