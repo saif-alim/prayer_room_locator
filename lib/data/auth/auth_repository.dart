@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
-import 'package:prayer_room_locator/utils/error-handling/failure.dart';
 import 'package:prayer_room_locator/data/firebase_providers.dart';
 import 'package:prayer_room_locator/utils/error-handling/type_defs.dart';
 import 'package:prayer_room_locator/data/auth/user_model.dart';
@@ -71,9 +70,9 @@ class AuthRepository {
       }
       return right(userModel);
     } on FirebaseException catch (e) {
-      throw e.message!;
+      return left(Failure(e.message!));
     } catch (e) {
-      return left(Failure(e.toString()));
+      return left(Failure('Sign in was unsuccessful'));
     }
   }
 
@@ -86,7 +85,7 @@ class AuthRepository {
   }) async {
     try {
       if (email.isEmpty || password.isEmpty || name.isEmpty) {
-        throw 'Fields must not be empty';
+        return left(Failure('Fields must not be empty'));
       }
       // register user
       UserCredential userCredential = await _auth
@@ -107,26 +106,45 @@ class AuthRepository {
       }
       return right(userModel);
     } on FirebaseAuthException catch (e) {
-      throw e.message!;
+      if (e.code == 'email-already-in-use') {
+        return left(Failure('Email is already in use'));
+      } else if (e.code == 'invalid-email') {
+        return left(Failure('Email is invalid'));
+      } else if (e.code == 'weak-password') {
+        return left(Failure('Password must be at least 6 characters'));
+      }
+      return left(Failure(e.toString()));
     } catch (e) {
       return left(Failure(e.toString()));
     }
   }
 
+  // Handles login of the user
   FutureEither<UserModel> loginWithEmail({
     required String email,
     required String password,
     required BuildContext context,
   }) async {
     try {
+      if (email.isEmpty || password.isEmpty) {
+        return left(Failure('Fields must not be empty'));
+      }
+
       final userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       UserModel userModel = await getUserData(userCredential.user!.uid).first;
       return right(userModel);
     } on FirebaseAuthException catch (e) {
-      throw e.message!;
+      if (e.code == 'invalid-credential') {
+        return left(Failure('Email or password is invalid'));
+      } else if (e.code == 'wrong-password') {
+        return left(Failure('Password is incorrect'));
+      } else if (e.code == 'user-not-found') {
+        return left(Failure('User Not Found'));
+      }
+      return left(Failure(e.message!));
     } catch (e) {
-      return Left(Failure(e.toString()));
+      return left(Failure(e.toString()));
     }
   }
 

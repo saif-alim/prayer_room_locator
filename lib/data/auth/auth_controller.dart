@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/data/auth/auth_repository.dart';
 import 'package:prayer_room_locator/data/auth/user_model.dart';
 import 'package:prayer_room_locator/utils/common/utils.dart';
+import 'package:routemaster/routemaster.dart';
 
 // Provider to manage user information globally.
 final userProvider = StateProvider<UserModel?>((ref) => null);
@@ -76,10 +77,10 @@ class AuthController extends StateNotifier<bool> {
       context: context,
     );
     state = false;
-    user.fold(
-        (l) => showSnackBar(context, l.message),
-        (userModel) =>
-            _ref.read(userProvider.notifier).update((state) => userModel));
+    user.fold((l) => showSnackBar(context, l.message), (userModel) {
+      _ref.read(userProvider.notifier).update((state) => userModel);
+      Routemaster.of(context).pop();
+    });
   }
 
   void loginWithEmail({
@@ -94,10 +95,10 @@ class AuthController extends StateNotifier<bool> {
       context: context,
     );
     state = false;
-    user.fold(
-        (l) => showSnackBar(context, l.message),
-        (userModel) =>
-            _ref.read(userProvider.notifier).update((state) => userModel));
+    user.fold((l) => showSnackBar(context, l.message), (userModel) {
+      _ref.read(userProvider.notifier).update((state) => userModel);
+      Routemaster.of(context).pop();
+    });
   }
 
   // Method to handle user log out.

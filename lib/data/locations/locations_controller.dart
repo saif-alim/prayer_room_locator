@@ -87,23 +87,18 @@ class LocationsController extends StateNotifier<bool> {
     return _locationsRepository.getLocations();
   }
 
-  // Method to build map markers for each location
+// Method to build map markers for each location
   Future<List<Marker>> buildMarkers(BuildContext context) async {
-    final locations = await getLocations().first;
-    final List<Marker> markers = [];
-
-    for (var location in locations) {
-      markers.add(Marker(
-        markerId: MarkerId(location.id),
-        position: LatLng(location.latitude, location.longitude),
-        onTap: () {
-          Routemaster.of(context).push('/location/${location.id}');
-        },
-        icon: BitmapDescriptor.defaultMarker,
-      ));
-    }
-
-    return markers;
+    final locations = await getLocations().first; // cache
+    return locations
+        .map((location) => Marker(
+              markerId: MarkerId(location.id),
+              position: LatLng(location.latitude, location.longitude),
+              onTap: () =>
+                  Routemaster.of(context).push('/location/${location.id}'),
+              icon: BitmapDescriptor.defaultMarker,
+            ))
+        .toList();
   }
 
   // Get a location by its ID

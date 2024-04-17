@@ -72,6 +72,18 @@ class RatingsController extends StateNotifier<bool> {
     return _ratingsRepository.getRatingsByLocation(locationId);
   }
 
+  Future<double> getLocationAverageRating(String locationId) async {
+    List<Rating> locationRatings = await getRatingsByLocation(locationId).first;
+    final averageRating = locationRatings.isNotEmpty
+        ? locationRatings
+                .map((rating) => rating.ratingValue)
+                .reduce((a, b) => a + b) /
+            locationRatings.length
+        : 0.0;
+
+    return averageRating;
+  }
+
   // Method to edit a rating
   void editRating({
     required double newRatingvalue,

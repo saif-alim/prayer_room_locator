@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/data/auth/auth_controller.dart';
 import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
-import 'package:routemaster/routemaster.dart';
 
 // Class for email password sign up
 class EmailPasswordSignupPage extends ConsumerStatefulWidget {
@@ -31,7 +30,7 @@ class _EmailPasswordLoginPageState
   }
 
   // Method to handle user sign-up logic
-  void signUpUser() {
+  void signUpUser() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
     final name = nameController.text.trim();
@@ -42,7 +41,6 @@ class _EmailPasswordLoginPageState
           name: name,
           context: context,
         );
-    Routemaster.of(context).pop();
   }
 
   @override

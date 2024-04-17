@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/data/auth/auth_controller.dart';
 import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
-import 'package:routemaster/routemaster.dart';
 
 // Class for email password login
 class EmailPasswordLoginPage extends ConsumerStatefulWidget {
@@ -22,7 +21,7 @@ class _EmailPasswordLoginPageState
       TextEditingController(); // Controller for password input
 
   // Function to handle user login
-  void loginUser() {
+  void loginUser() async {
     // Login functionality
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
@@ -32,7 +31,6 @@ class _EmailPasswordLoginPageState
           password: password,
           context: context,
         );
-    Routemaster.of(context).pop();
   }
 
   // Dispose of controllers
@@ -76,7 +74,7 @@ class _EmailPasswordLoginPageState
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 100),
             child: CustomButton(
-              onTap: loginUser, // Login user on tap
+              onTap: loginUser,
               text: 'Sign In',
             ), // Login button
           )

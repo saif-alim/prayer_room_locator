@@ -51,10 +51,10 @@ class _MyAppState extends ConsumerState<MyApp> {
     return ref.watch(authStateChangeProvider).when(
           data: (data) => MaterialApp.router(
             debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme, // Sets light theme
+            theme: AppTheme.lightTheme, // Sets custom light theme
             routerDelegate: RoutemasterDelegate(routesBuilder: (context) {
               if (data != null) {
-                getData(ref, data); // Gets user data.
+                getData(ref, data); // Gets user data
                 if (userModel != null) {
                   return loggedInRoute; // If userModel is not null, returns the logged in route map
                 }

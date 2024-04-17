@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
-import 'package:prayer_room_locator/utils/error-handling/failure.dart';
 import 'package:prayer_room_locator/data/firebase_providers.dart';
 import 'package:prayer_room_locator/utils/error-handling/type_defs.dart';
 import 'package:prayer_room_locator/data/locations/location_model.dart';

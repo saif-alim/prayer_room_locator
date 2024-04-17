@@ -17,6 +17,7 @@ class MapPage extends ConsumerStatefulWidget {
 class MapPageState extends ConsumerState<MapPage> {
   final Completer<GoogleMapController> mapController = Completer();
   Set<Marker> _markers = {};
+  static const LatLng defaultPosition = LatLng(51.5080, -0.1281);
 
   @override
   void initState() {
@@ -50,6 +51,19 @@ class MapPageState extends ConsumerState<MapPage> {
     });
   }
 
+  // Update Markers
+  void updateMarkers(Position position) {
+    final userLocationMarker = Marker(
+      markerId: const MarkerId('userPosition'),
+      position: LatLng(position.latitude, position.longitude),
+      infoWindow: const InfoWindow(title: 'Your Location'),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+    );
+
+    _markers.removeWhere((m) => m.markerId == const MarkerId('userPosition'));
+    _markers.add(userLocationMarker);
+  }
+
   // Get current user location
   Future<Position> _getUserLocation(WidgetRef ref) async {
     return ref.read(locationsControllerProvider.notifier).getUserLocation();
@@ -68,48 +82,35 @@ class MapPageState extends ConsumerState<MapPage> {
     return Scaffold(
       appBar: const CustomAppBar(),
       drawer: const CustomDrawer(),
-      body: Consumer(
-        builder: (context, ref, child) {
-          // Listen for changes in the user's location
-          final positionAsyncValue = ref.watch(userLocationStreamProvider);
-
-          return positionAsyncValue.when(
-            data: (position) {
-              final userLocationMarker = Marker(
-                markerId: const MarkerId('userPosition'),
-                position: LatLng(position.latitude, position.longitude),
-                infoWindow: const InfoWindow(title: 'Your Location'),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue), // Blue marker for user location
-              );
-
-              final updatedMarkers = {
-                ..._markers,
-                userLocationMarker
-              }; // Update the markers set with the user's location
-
-              return GoogleMap(
-                zoomControlsEnabled: false,
-                compassEnabled: true,
-                myLocationButtonEnabled: false,
-                initialCameraPosition: const CameraPosition(
-                  target: LatLng(51.5080,
-                      -0.1281), // Initial focus before user location is fetched
-                  zoom: 10,
-                ),
-                onMapCreated: (controller) {
-                  if (!mapController.isCompleted) {
-                    mapController.complete(controller);
-                  }
-                },
-                markers: updatedMarkers,
-              );
+      body: Stack(
+        children: [
+          GoogleMap(
+            zoomControlsEnabled: false,
+            compassEnabled: true,
+            myLocationButtonEnabled: false,
+            initialCameraPosition: const CameraPosition(
+              target:
+                  defaultPosition, // Initial focus before user location is fetched
+              zoom: 10,
+            ),
+            onMapCreated: (controller) {
+              if (!mapController.isCompleted) {
+                mapController.complete(controller);
+              }
             },
-            error: (error, stackTrace) => Text(error.toString()),
-            loading: () =>
-                const Loader(), // Loading indicator while getting data
-          );
-        },
+            markers: _markers,
+          ),
+          // Listen for changes in the user's location
+          ref.watch(userLocationStreamProvider).when(
+                data: (position) {
+                  updateMarkers(position);
+                  return Container();
+                },
+                error: (error, stackTrace) => Text(error.toString()),
+                loading: () =>
+                    const Loader(), // Loading indicator while getting data
+              ),
+        ],
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(8.0),

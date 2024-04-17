@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -23,11 +24,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 // Custom Drawer Widget
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends ConsumerWidget {
   const CustomDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Drawer(
       child: Column(children: [
         DrawerHeader(
