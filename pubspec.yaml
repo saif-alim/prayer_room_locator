@@ -126,5 +126,5 @@ flutter_launcher_icons:
   android: "launcher_icon"
   ios: "AppIcon"
   image_path: "assets/images/hijraAppIcon.png"
-  min_sdk_android: 19
+  min_sdk_android: 21
   remove_alpha_ios: true
