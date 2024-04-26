@@ -1,4 +1,4 @@
-package com.example.prayer_room_locator
+package com.example.hijra
 
 import io.flutter.embedding.android.FlutterActivity
 

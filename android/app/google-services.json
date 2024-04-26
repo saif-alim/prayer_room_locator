@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:249723010235:android:9b45a19112ffa4260b3d9e",
         "android_client_info": {
-          "package_name": "com.example.prayer_room_locator"
+          "package_name": "com.example.hijra"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "249723010235-15gh6kr5o5b97udh2pi97c7e1kv9sc89.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.prayer_room_locator",
+            "package_name": "com.example.hijra",
             "certificate_hash": "ee016cdacba14bba01f4a8892897fbff17aba3bb"
           }
         },
