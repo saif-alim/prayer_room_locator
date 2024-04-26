@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
-import 'package:prayer_room_locator/data/auth/auth_controller.dart';
 import 'package:routemaster/routemaster.dart';
 
 // ConsumerWidget allows the widget to listen to Riverpod providers.
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
 
-  // Initiate Google sign in process
-  void signInWithGoogle(BuildContext context, WidgetRef ref) {
-    // Accesses AuthController and calls signInWithGoogle
-    ref.read(authControllerProvider.notifier).signInWithGoogle(context);
-  }
+  // // Initiate Google sign in process
+  // void signInWithGoogle(BuildContext context, WidgetRef ref) {
+  //   // Accesses AuthController and calls signInWithGoogle
+  //   ref.read(authControllerProvider.notifier).signInWithGoogle(context);
+  // }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -70,26 +69,26 @@ class LoginPage extends ConsumerWidget {
             ),
             const SizedBox(height: 15),
 
-            // Google Sign-In Button widget
-            SizedBox(
-              width: buttonWidth,
-              child: ElevatedButton.icon(
-                style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.white),
-                  foregroundColor: MaterialStatePropertyAll(Colors.black),
-                ),
-                onPressed: () => signInWithGoogle(context, ref),
-                icon: Image.asset(
-                  Constants.googlePath, // Google icon
-                  width: 35,
-                ),
-                label: const Text(
-                  'Continue with Google',
-                  style: Constants.buttonLabel,
-                ), // Text label
-              ),
-            ),
-            const SizedBox(height: 20),
+            // // Google Sign-In Button widget
+            // SizedBox(
+            //   width: buttonWidth,
+            //   child: ElevatedButton.icon(
+            //     style: const ButtonStyle(
+            //       backgroundColor: MaterialStatePropertyAll(Colors.white),
+            //       foregroundColor: MaterialStatePropertyAll(Colors.black),
+            //     ),
+            //     onPressed: () => signInWithGoogle(context, ref),
+            //     icon: Image.asset(
+            //       Constants.googlePath, // Google icon
+            //       width: 35,
+            //     ),
+            //     label: const Text(
+            //       'Continue with Google',
+            //       style: Constants.buttonLabel,
+            //     ), // Text label
+            //   ),
+            // ),
+            // const SizedBox(height: 20),
           ],
         ),
       ),

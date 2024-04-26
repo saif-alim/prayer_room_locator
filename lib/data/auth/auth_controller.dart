@@ -7,10 +7,10 @@ import 'package:prayer_room_locator/data/auth/user_model.dart';
 import 'package:prayer_room_locator/utils/common/utils.dart';
 import 'package:routemaster/routemaster.dart';
 
-// Provider to manage user information globally.
+// Provider to manage user information globally
 final userProvider = StateProvider<UserModel?>((ref) => null);
 
-// Provider to manage authentication state.
+// Provider to manage authentication state
 final authControllerProvider =
     StateNotifierProvider.autoDispose<AuthController, bool>(
   (ref) => AuthController(
@@ -19,26 +19,26 @@ final authControllerProvider =
   ),
 );
 
-// Provider to listen to auth state changes.
+// Provider to listen to auth state changes
 final authStateChangeProvider = StreamProvider.autoDispose<User?>((ref) {
   final authController = ref.watch(authControllerProvider.notifier);
   return authController.authStateChange;
 });
 
-// Provider to retrieve user data based on UID.
+// Provider to retrieve user data based on UID
 final getUserDataProvider =
     StreamProvider.autoDispose.family((ref, String uid) {
   final authController = ref.watch(authControllerProvider.notifier);
   return authController.getUserData(uid);
 });
 
-// Provider to retrieve user data based on email.
+// Provider to retrieve user data based on email
 final getUserByEmailProvider =
     StreamProvider.autoDispose.family((ref, String email) {
   return ref.watch(authControllerProvider.notifier).getUserByEmail(email);
 });
 
-// AuthController class for managing authentication logic.
+// AuthController class for managing authentication logic
 class AuthController extends StateNotifier<bool> {
   final AuthRepository _authRepository;
   final Ref _ref;
@@ -46,23 +46,10 @@ class AuthController extends StateNotifier<bool> {
   AuthController({required AuthRepository authRepository, required Ref ref})
       : _authRepository = authRepository,
         _ref = ref,
-        super(false); // Initializes with 'false' indicating not loading.
+        super(false); // Initializes with 'false' indicating not loading
 
-  // Stream to get auth state changes.
+  // Stream to get auth state changes
   Stream<User?> get authStateChange => _authRepository.authStateChange;
-
-  // Handles Google sign-in.
-  void signInWithGoogle(BuildContext context) async {
-    state = true; // Set loading to true.
-    final user = await _authRepository.signInWithGoogle();
-    state = false; // Set loading to false.
-    user.fold(
-        (l) =>
-            showSnackBar(context, l.message), // Show error message on failure.
-        (userModel) => _ref
-            .read(userProvider.notifier)
-            .update((state) => userModel)); // Update user state on success.
-  }
 
   void signUpWithEmail({
     required String email,
@@ -79,8 +66,8 @@ class AuthController extends StateNotifier<bool> {
     );
     state = false;
     user.fold((l) => showSnackBar(context, l.message), (userModel) {
-      Routemaster.of(context).pop();
       _ref.read(userProvider.notifier).update((state) => userModel);
+      Routemaster.of(context).replace('/');
     });
   }
 
@@ -97,27 +84,27 @@ class AuthController extends StateNotifier<bool> {
     );
     state = false;
     user.fold((l) => showSnackBar(context, l.message), (userModel) {
-      Routemaster.of(context).pop();
       _ref.read(userProvider.notifier).update((state) => userModel);
+      Routemaster.of(context).replace('/');
     });
   }
 
-  // Method to handle user log out.
+  // Method to handle user log out
   void logOut() async {
     _authRepository.logOut();
   }
 
-  // Get user data by UID.
+  // Get user data by UID
   Stream<UserModel> getUserData(String uid) {
     return _authRepository.getUserData(uid);
   }
 
-  // Get user data by email.
+  // Get user data by email
   Stream<UserModel?> getUserByEmail(String email) {
     return _authRepository.getUserByEmail(email);
   }
 
-  // Get all users data.
+  // Get all users data
   Stream<List<UserModel>> getUsers() {
     return _authRepository.getUsers();
   }

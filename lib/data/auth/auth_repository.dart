@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
 import 'package:prayer_room_locator/data/firebase_providers.dart';
 import 'package:prayer_room_locator/utils/error-handling/type_defs.dart';
@@ -15,7 +14,6 @@ final authRepositoryProvider = Provider(
   (ref) => AuthRepository(
     firestore: ref.read(firestoreProvider),
     auth: ref.read(authProvider),
-    googleSignIn: ref.read(googleSignInProvider),
   ),
 );
 
@@ -23,15 +21,12 @@ final authRepositoryProvider = Provider(
 class AuthRepository {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
-  final GoogleSignIn _googleSignIn;
 
   AuthRepository({
     required FirebaseFirestore firestore,
     required FirebaseAuth auth,
-    required GoogleSignIn googleSignIn,
   })  : _auth = auth,
-        _firestore = firestore,
-        _googleSignIn = googleSignIn;
+        _firestore = firestore;
 
   // Gets access to the users collection in Firestore
   CollectionReference get _users =>
@@ -39,42 +34,6 @@ class AuthRepository {
 
   // Stream that notifies auth state changes
   Stream<User?> get authStateChange => _auth.authStateChanges();
-
-  // Handles Google Sign-In and user creation/updating
-  FutureEither<UserModel> signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-
-      final googleAuth = await googleUser?.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-
-      UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-
-      UserModel userModel;
-
-      if (userCredential.additionalUserInfo!.isNewUser) {
-        userModel = UserModel(
-          name: userCredential.user!.displayName ?? 'No Name',
-          email: userCredential.user!.email ?? 'No Email',
-          uid: userCredential.user!.uid,
-          isAuthenticated: true,
-        );
-        await _users.doc(userModel.uid).set(userModel.toMap());
-      } else {
-        userModel = await getUserData(userCredential.user!.uid).first;
-      }
-      return right(userModel);
-    } on FirebaseException catch (e) {
-      return left(Failure(e.message!));
-    } catch (e) {
-      return left(Failure('Sign in was unsuccessful'));
-    }
-  }
 
   // Handles sign up of the user and user creation
   FutureEither<UserModel> signUpWithEmail({
@@ -150,7 +109,6 @@ class AuthRepository {
 
   // Method to log out the current user
   void logOut() async {
-    await _googleSignIn.signOut();
     await _auth.signOut();
   }
 

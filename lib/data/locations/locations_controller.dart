@@ -34,7 +34,7 @@ final getLocationByIdProvider =
 });
 
 // Provider to monitor and stream user location
-final userLocationStreamProvider = StreamProvider.autoDispose<Position>((ref) {
+final userLocationStreamProvider = StreamProvider<Position>((ref) {
   final locationsController = ref.watch(locationsControllerProvider.notifier);
   return locationsController.getPositionStream();
 });
