@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
 import 'package:prayer_room_locator/data/locations/locations_controller.dart';
 import 'package:prayer_room_locator/utils/common/loader.dart';
+import 'package:prayer_room_locator/utils/error-handling/error_text.dart';
 
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key});
@@ -20,12 +21,6 @@ class MapPageState extends ConsumerState<MapPage> {
   static const LatLng defaultPosition = LatLng(51.5080, -0.1281);
 
   @override
-  void initState() {
-    super.initState();
-    _initMapAndMarkers(); // Initialize the map and markers once the widget is created
-  }
-
-  @override
   void dispose() {
     super.dispose();
     // Dispose controller to free resources
@@ -36,6 +31,28 @@ class MapPageState extends ConsumerState<MapPage> {
 
   // Initializes the user's position on the map and sets up markers
   Future<void> _initMapAndMarkers() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return;
+    }
+
+    // Check and request permissions if necessary
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever
+      return;
+    }
+
     Position position =
         await _getUserLocation(ref); // Get current user location
     await _moveToPosition(position); // Move the map to user location
@@ -82,36 +99,45 @@ class MapPageState extends ConsumerState<MapPage> {
     return Scaffold(
       appBar: const CustomAppBar(),
       drawer: const CustomDrawer(),
-      body: Stack(
-        children: [
-          GoogleMap(
-            zoomControlsEnabled: false,
-            compassEnabled: true,
-            myLocationButtonEnabled: false,
-            initialCameraPosition: const CameraPosition(
-              target:
-                  defaultPosition, // Initial focus before user location is fetched
-              zoom: 10,
-            ),
-            onMapCreated: (controller) {
-              if (!mapController.isCompleted) {
-                mapController.complete(controller);
-              }
+      body: ref.watch(userLocationStreamProvider).when(
+            data: (position) {
+              updateMarkers(position);
+              return Stack(
+                children: [
+                  GoogleMap(
+                    zoomControlsEnabled: false,
+                    compassEnabled: true,
+                    myLocationButtonEnabled: false,
+                    initialCameraPosition: const CameraPosition(
+                      target:
+                          defaultPosition, // Initial focus before user location is fetched
+                      zoom: 10,
+                    ),
+                    onMapCreated: (controller) {
+                      _initMapAndMarkers();
+                      if (!mapController.isCompleted) {
+                        mapController.complete(controller);
+                      }
+                    },
+                    markers: _markers,
+                  ),
+                  // Listen for changes in the user's location
+                  ref.watch(userLocationStreamProvider).when(
+                        data: (position) {
+                          updateMarkers(position);
+                          return Container();
+                        },
+                        error: (error, stackTrace) => Text(error.toString()),
+                        loading: () =>
+                            const Loader(), // Loading indicator while getting data
+                      ),
+                ],
+              );
             },
-            markers: _markers,
+            error: (error, stackTrace) => ErrorText(error: error.toString()),
+            loading: () =>
+                const Loader(), // Loading indicator while getting data
           ),
-          // Listen for changes in the user's location
-          ref.watch(userLocationStreamProvider).when(
-                data: (position) {
-                  updateMarkers(position);
-                  return Container();
-                },
-                error: (error, stackTrace) => Text(error.toString()),
-                loading: () =>
-                    const Loader(), // Loading indicator while getting data
-              ),
-        ],
-      ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Transform.scale(

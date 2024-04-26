@@ -124,6 +124,7 @@ class LocationDetailsPage extends ConsumerWidget {
                                         allowHalfRating: true,
                                         itemCount: 5,
                                         itemSize: 20.0,
+                                        unratedColor: Colors.black12,
                                         itemBuilder: (context, _) => const Icon(
                                             Icons.star,
                                             color: Colors.amber),

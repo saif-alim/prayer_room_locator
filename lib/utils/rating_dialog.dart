@@ -22,7 +22,7 @@ class RatingDialog {
   });
 
   // Function to handle rating submission
-  Future<void> onRatingSubmit(double userRating, WidgetRef ref) async {
+  Future<void> submitRating(double userRating, WidgetRef ref) async {
     final ratingsController = ref.read(ratingsControllerProvider.notifier);
     // Get existing ratings for the location
     final existingRatings =
@@ -71,6 +71,7 @@ class RatingDialog {
                 direction: Axis.horizontal,
                 allowHalfRating: true,
                 itemCount: 5,
+                unratedColor: Colors.black12,
                 itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                 itemBuilder: (context, _) => const Icon(
                   Icons.star,
@@ -91,7 +92,7 @@ class RatingDialog {
             TextButton(
               child: const Text('Submit'),
               onPressed: () {
-                onRatingSubmit(userRating, ref); // Submit rating
+                submitRating(userRating, ref); // Submit rating
                 Routemaster.of(context).pop(); // Close the dialog on submit
               },
             ),

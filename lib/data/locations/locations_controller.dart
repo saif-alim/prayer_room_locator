@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -131,42 +132,61 @@ class LocationsController extends StateNotifier<bool> {
         (r) => showSnackBar(context, 'Success!'));
   }
 
-  // Method to get a stream of continuous location updates of user location
-  Stream<Position> getPositionStream() {
+  Stream<Position> getPositionStream() async* {
+    StreamController<Position> controller = StreamController<Position>();
+    await checkAndStartStream(controller);
+    yield* controller.stream;
+  }
+
+  // Checks for permissions and starts stream when permissions are enabled
+  Future<void> checkAndStartStream(
+      StreamController<Position> controller) async {
+    // Checks that location services are enabled
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return;
+    }
+
+    LocationPermission permission =
+        await Geolocator.checkPermission(); // checks for location permissions
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return;
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever
+      return;
+    }
+
+    startLocationStream(controller);
+  }
+
+  void startLocationStream(StreamController<Position> controller) {
     const locationSettings = LocationSettings(
       accuracy: LocationAccuracy.bestForNavigation,
-      distanceFilter: 10, // Update every 10 metres.
+      distanceFilter: 10, // Updates every 10 metres
     );
 
-    return Geolocator.getPositionStream(locationSettings: locationSettings);
+    var positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings);
+    positionStream.listen(
+      (position) {
+        controller.add(position);
+      },
+      onError: (e) {
+        controller.addError(e);
+      },
+      onDone: () {
+        controller.close();
+      },
+      cancelOnError: true,
+    );
   }
 
   // Method to get a future of user current position
   Future<Position> getUserLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Check if location services are enabled
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    // Check and request permissions if necessary
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    // If permissions are granted, retrieve the current position
     return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.bestForNavigation);
   }

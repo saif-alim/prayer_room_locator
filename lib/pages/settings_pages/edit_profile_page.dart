@@ -5,6 +5,7 @@ import 'package:prayer_room_locator/data/auth/user_model.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
 import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
 
+// Class to let user edit profile details
 class EditProfilePage extends ConsumerStatefulWidget {
   const EditProfilePage({super.key});
 
@@ -17,6 +18,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   final nameController =
       TextEditingController(); // Controller for display name text field
 
+  // Method to save updated details
   void saveNewDetails(UserModel user) {
     final newDisplayName = nameController.text.trim();
 
@@ -26,13 +28,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
   @override
   void dispose() {
-    nameController.dispose();
+    nameController.dispose(); // Dispose to avoid memory leaks
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.read(userProvider)!;
+    final user = ref.read(userProvider)!; // Get current user UserModel
     return Scaffold(
         appBar: const CustomAppBar(),
         drawer: const CustomDrawer(),
