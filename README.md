@@ -19,7 +19,7 @@ Hijra is a mobile application developed using Flutter, designed to help users fi
 ### Direct Download Installation
 
 To install the app onto an Android device, please download the application from the following link:
-[Download Hijra](https://drive.google.com/file/d/1HdCWsT568HwYFWz41QOdtTwquW3rcpq2/view?usp=sharing)
+[Download Hijra](https://drive.google.com/file/d/1PhKDxjIiM1lutQXGtON12-PsGFVg7t4I/view?usp=sharing)
 
 ### Manual Installation via Flutter
 
