@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
 import 'package:prayer_room_locator/data/locations/locations_controller.dart';
+import 'package:prayer_room_locator/utils/common/utils.dart';
 import 'package:prayer_room_locator/utils/coordinates_help_dialog.dart';
 
 // Class to add a new location
@@ -46,12 +47,25 @@ class _AddLocationPageState extends ConsumerState<AddLocationPage> {
     if (_wudhu) amenities.add("wudhu");
     if (_parking) amenities.add("parking");
 
+    final lat = latitudeController.text.trim();
+    final long = longitudeController.text.trim();
+    final locationName = locationNameController.text.trim();
+    final details = detailsController.text.trim();
+
+    if (lat.isEmpty ||
+        long.isEmpty ||
+        locationName.isEmpty ||
+        details.isEmpty) {
+      showSnackBar(context, 'Fields must not be empty');
+      return;
+    }
+
     // Use the locations controller to add location with given details and amenities
     ref.read(locationsControllerProvider.notifier).addLocation(
-          latitude: double.parse(latitudeController.text.trim()),
-          longitude: double.parse(longitudeController.text.trim()),
-          name: locationNameController.text.trim(),
-          details: detailsController.text.trim(),
+          latitude: double.parse(lat),
+          longitude: double.parse(long),
+          name: locationName,
+          details: details,
           amenities: amenities,
           context: context,
         );

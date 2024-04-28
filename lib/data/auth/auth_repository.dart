@@ -43,6 +43,7 @@ class AuthRepository {
     required BuildContext context,
   }) async {
     try {
+      // Ensures that no fields are left empty
       if (email.isEmpty || password.isEmpty || name.isEmpty) {
         return left(Failure('Fields must not be empty'));
       }
@@ -50,7 +51,7 @@ class AuthRepository {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      UserModel userModel;
+      UserModel userModel; // Initialise data class
 
       if (userCredential.additionalUserInfo!.isNewUser) {
         userModel = UserModel(

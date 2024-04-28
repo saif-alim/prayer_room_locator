@@ -46,7 +46,7 @@ class RatingsRepository {
     });
 
     // Applying debounce
-    return ratingsStream.debounceTime(const Duration(milliseconds: 500));
+    return ratingsStream.debounceTime(const Duration(seconds: 5));
   }
 
   // Updates a rating document in Firestore

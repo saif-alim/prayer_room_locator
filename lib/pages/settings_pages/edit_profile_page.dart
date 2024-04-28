@@ -4,6 +4,7 @@ import 'package:prayer_room_locator/data/auth/auth_controller.dart';
 import 'package:prayer_room_locator/data/auth/user_model.dart';
 import 'package:prayer_room_locator/utils/common/constants.dart';
 import 'package:prayer_room_locator/utils/common/custom_widgets.dart';
+import 'package:prayer_room_locator/utils/common/utils.dart';
 
 // Class to let user edit profile details
 class EditProfilePage extends ConsumerStatefulWidget {
@@ -21,9 +22,15 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   // Method to save updated details
   void saveNewDetails(UserModel user) {
     final newDisplayName = nameController.text.trim();
+    if (newDisplayName.isEmpty) {
+      showSnackBar(context, 'Field must not be empty');
+      return;
+    }
 
     ref.read(authControllerProvider.notifier).editLocation(
         newDisplayName: newDisplayName, user: user, context: context);
+
+    nameController.clear();
   }
 
   @override

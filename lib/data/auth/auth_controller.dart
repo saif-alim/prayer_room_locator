@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prayer_room_locator/data/auth/auth_repository.dart';
 import 'package:prayer_room_locator/data/auth/user_model.dart';
 import 'package:prayer_room_locator/utils/common/utils.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:rxdart/rxdart.dart';
 
 // Provider to manage user information globally
 final userProvider = StateProvider<UserModel?>((ref) => null);
@@ -49,7 +49,8 @@ class AuthController extends StateNotifier<bool> {
         super(false); // Initializes with 'false' indicating not loading
 
   // Stream to get auth state changes
-  Stream<User?> get authStateChange => _authRepository.authStateChange;
+  Stream<User?> get authStateChange =>
+      _authRepository.authStateChange.debounceTime(Durations.long1);
 
   void signUpWithEmail({
     required String email,

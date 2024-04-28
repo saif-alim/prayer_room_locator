@@ -16,7 +16,7 @@ class Constants {
   static const mfcIconPath = 'assets/anemities/mfc.png';
 
   // Static IDs for special users or roles
-  static const globalMod = 'L9wDqmQkeadHYMfVYlrf396wuMt2';
+  static const globalMod = 'KVTYKuhaslf45gZgUiIyHCZiaFy2';
   static const hijra = 'هِجْرَة';
   static const Set<String> initialModSet = {globalMod};
 
