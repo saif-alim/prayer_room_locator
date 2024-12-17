@@ -42,6 +42,7 @@ Alternatively, if you have Flutter installed on your computer, you can install t
 
 - Connect your Android device to your computer using a USB cable.
 - Ensure your device is detected by typing `flutter devices` in the terminal. Verify that your device is listed in the output.
+- Alternatively you can setup wireless ADB.
 
 #### 4. Navigate to the Project's Directory in the Terminal
 
